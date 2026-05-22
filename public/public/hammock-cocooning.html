@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Hammock Cocooning · Boardwalk Aruba</title>
+<meta name="theme-color" content="#155864" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500&family=Noto+Serif+Display:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --sand:#f2ebe2; --beige:#e9dace; --palapa:#ccb2a8; --seafoam:#dbeced;
+    --bw-blue:#00b3c2; --teal:#155864; --teal-soft:#e3eef0;
+    --ink:#155864; --ink-soft:#496c74; --ink-faint:#7d9097;
+    --paper:#ffffff; --line:#e3d6c8;
+    --ok:#1d5d3a; --ok-soft:#d5e9d8;
+    --warn:#8a5a14; --warn-soft:#f7e4be;
+    --danger:#8a2f2f; --danger-soft:#f3e1e1;
+    --radius:14px; --shadow:0 1px 2px rgba(21,88,100,.05),0 10px 28px rgba(21,88,100,.08);
+  }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{font-family:'Karla',system-ui,-apple-system,sans-serif;font-weight:300;background:var(--sand);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:580px;margin:0 auto;padding:22px 18px 64px}
+  .hero{background:linear-gradient(170deg,#155864 0%,#1d7a86 100%);color:var(--sand);border-radius:var(--radius);padding:30px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(0,179,194,.35),transparent 55%),radial-gradient(circle at 15% 90%,rgba(219,236,237,.18),transparent 55%);pointer-events:none}
+  .eyebrow{text-transform:uppercase;letter-spacing:.24em;font-size:10.5px;font-weight:400;color:var(--seafoam);margin:0 0 10px}
+  h1{font-family:'Noto Serif Display',Georgia,serif;font-weight:400;font-size:36px;line-height:1.1;margin:0 0 12px;color:var(--sand)}
+  h1 .italic{font-family:'Playfair Display',Georgia,serif;font-style:italic;color:var(--seafoam)}
+  .intro{font-size:15px;color:rgba(242,235,226,.88);margin:0;max-width:480px}
+  .card{background:var(--paper);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow);margin-top:18px}
+  .card h2{font-family:'Noto Serif Display',Georgia,serif;font-weight:400;font-size:24px;margin:0 0 14px;color:var(--teal)}
+  .lede{font-size:14px;color:var(--ink-soft);margin:-6px 0 16px}
+  .cal-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 14px;padding:4px 0}
+  .cal-nav-label{font-family:'Noto Serif Display',Georgia,serif;font-weight:400;font-size:19px;color:var(--teal);text-align:center;flex:1;letter-spacing:.01em}
+  .cal-nav-label .italic{font-family:'Playfair Display',Georgia,serif;font-style:italic;color:var(--bw-blue)}
+  .cal-nav-btn{background:var(--sand);border:1px solid var(--line);color:var(--teal);font-size:22px;width:38px;height:38px;border-radius:999px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s,opacity .12s;font-family:inherit;padding:0}
+  .cal-nav-btn:hover:not(:disabled){background:var(--seafoam);border-color:var(--bw-blue)}
+  .cal-nav-btn:disabled{opacity:.35;cursor:not-allowed}
+  .cal-month{margin-top:4px}
+  .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px;text-align:center;font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal-day{aspect-ratio:1/1.05;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--ink-faint);background:transparent;position:relative;user-select:none}
+  .cal-day.empty{visibility:hidden}
+  .cal-day.regular{color:var(--ink-faint);font-weight:300}
+  .cal-day.session{cursor:pointer;background:var(--sand);color:var(--ink);border:1px solid var(--line);transition:transform .08s,border-color .15s,box-shadow .15s}
+  .cal-day.session:hover{border-color:var(--bw-blue)}
+  .cal-day.session.selected{background:var(--paper);border-color:var(--bw-blue);box-shadow:0 0 0 2px var(--seafoam),0 4px 14px rgba(0,179,194,.18);transform:translateY(-1px)}
+  .cal-day .num{font-family:'Noto Serif Display',Georgia,serif;font-size:18px;font-weight:400;line-height:1}
+  .cal-day.session .num{color:var(--teal)}
+  .cal-day .pill{margin-top:4px;font-size:9.5px;font-weight:500;line-height:1;padding:3px 6px;border-radius:999px;letter-spacing:.04em;white-space:nowrap}
+  .cal-day.open .pill{background:var(--ok-soft);color:var(--ok)}
+  .cal-day.low .pill{background:var(--warn-soft);color:var(--warn)}
+  .cal-day.full .pill{background:var(--danger-soft);color:var(--danger)}
+  .cal-day.loading .pill{background:var(--sand);color:var(--ink-faint)}
+  .cal-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:11.5px;color:var(--ink-soft)}
+  .cal-legend .dot{display:inline-block;width:9px;height:9px;border-radius:999px;vertical-align:middle;margin-right:5px}
+  .cal-legend .dot.ok{background:var(--ok)} .cal-legend .dot.low{background:var(--warn)} .cal-legend .dot.full{background:var(--danger)}
+  .waiver{background:var(--sand);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-top:16px;font-size:13px;color:var(--ink-soft);line-height:1.55;max-height:220px;overflow-y:auto}
+  .waiver strong{color:var(--ink);font-weight:500}
+  .waiver-box{display:flex;align-items:flex-start;gap:12px;margin-top:12px;padding:14px 16px;background:var(--paper);border:2px solid var(--line);border-radius:12px;cursor:pointer;transition:border-color .15s,background .15s}
+  .waiver-box:has(input:checked){border-color:var(--bw-blue);background:var(--seafoam)}
+  .waiver-box input{margin-top:3px;accent-color:var(--bw-blue);width:18px;height:18px;flex-shrink:0}
+  .waiver-box label{font-size:13.5px;color:var(--ink);cursor:pointer;flex:1;font-weight:400}
+  .field{margin-top:14px}
+  .field label{display:block;font-size:12px;font-weight:500;color:var(--teal);margin-bottom:6px;letter-spacing:.04em}
+  .field input,.field select{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;font-weight:300;background:var(--paper);color:var(--ink);-webkit-appearance:none;appearance:none}
+  .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23155864' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--bw-blue);box-shadow:0 0 0 3px var(--seafoam)}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .help{font-size:12px;color:var(--ink-faint);margin-top:6px}
+  .btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:20px;transition:transform .05s,background .15s,opacity .15s;letter-spacing:.03em}
+  .btn-primary{background:var(--teal);color:var(--sand)} .btn-primary:hover:not(:disabled){background:#0e4651} .btn-primary:active:not(:disabled){transform:translateY(1px)}
+  .btn-primary:disabled{background:var(--palapa);color:rgba(255,255,255,.85);cursor:not-allowed;opacity:.85}
+  .btn-secondary{background:var(--paper);color:var(--teal);border:1.5px solid var(--teal)} .btn-secondary:hover:not(:disabled){background:var(--seafoam)}
+  .state{text-align:center;padding:26px 18px}
+  .state h2{font-family:'Noto Serif Display',Georgia,serif;font-weight:400;font-size:28px;color:var(--teal);margin:10px 0 10px}
+  .state h2 .italic{font-family:'Playfair Display',Georgia,serif;font-style:italic;color:var(--bw-blue)}
+  .state p{color:var(--ink-soft);font-size:15px;margin:0 auto;max-width:420px}
+  .state-icon{font-size:38px;line-height:1}
+  .state-meta{background:var(--seafoam);border-radius:10px;padding:14px;margin:16px auto;font-size:14px;color:var(--teal);max-width:360px}
+  .state-meta strong{font-weight:500}
+  .cancel-link-row{margin-top:18px;font-size:13.5px}
+  .cancel-link-row a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
+  .cancel-link-row a:hover{color:var(--danger)}
+  .hidden{display:none!important}
+  .footer-note{margin-top:22px;text-align:center;font-size:12px;color:var(--ink-faint);line-height:1.55}
+  .footer-note .italic{font-family:'Playfair Display',Georgia,serif;font-style:italic}
+  .error-msg{color:var(--danger);font-size:13.5px;margin-top:10px;padding:10px 12px;background:var(--danger-soft);border-radius:8px}
+  .spaces-remaining{font-size:13.5px;color:var(--ink-soft);margin:4px 0 4px}
+  .spaces-remaining strong{color:var(--bw-blue);font-weight:500}
+  .loading-row{color:var(--ink-faint);font-size:14px;padding:24px;text-align:center}
+  @media (max-width:480px){h1{font-size:30px}.field-row{grid-template-columns:1fr}.wrap{padding-top:14px}.cal-day .num{font-size:16px}.cal-day .pill{font-size:9px;padding:2px 5px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Slow Summer · Boardwalk Aruba</p>
+    <h1>Hammock<br/><span class="italic">Cocooning</span></h1>
+    <p class="intro">Cocoon in a soft anti-gravity hammock beneath the stars while gentle movement, guided breath, and meditation help your body soften and your mind unwind.</p>
+  </header>
+
+  <section class="card" id="step-sessions">
+    <h2>Choose your evening</h2>
+    <div class="cal-nav" id="calNav" style="display:none;">
+      <button class="cal-nav-btn" id="calPrev" aria-label="Previous month">‹</button>
+      <div class="cal-nav-label" id="calNavLabel"></div>
+      <button class="cal-nav-btn" id="calNext" aria-label="Next month">›</button>
+    </div>
+    <div id="calendarContainer"><div class="loading-row">Checking availability…</div></div>
+    <div class="cal-legend" id="calLegend" style="display:none;">
+      <span><span class="dot ok"></span>Open</span>
+      <span><span class="dot low"></span>Filling up</span>
+      <span><span class="dot full"></span>Waitlist only</span>
+    </div>
+  </section>
+
+  <section class="card hidden" id="step-form">
+    <h2 id="formHeading">Reserve your spot</h2>
+    <p class="spaces-remaining" id="spacesRemaining"></p>
+
+    <div class="waiver">
+      <strong>Waiver</strong><br><br>
+      I understand that the Hammock Cocooning session is a wellness activity facilitated by an independent instructor and involves being suspended in an aerial hammock structure in an outdoor garden setting, combined with guided breathwork and sound bowl meditation. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health and have no medical conditions — including back or neck injuries, vertigo, respiratory conditions or pregnancy — that may be affected by suspension, breathwork or sound bowl vibrations. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.
+    </div>
+
+    <label class="waiver-box">
+      <input type="checkbox" id="waiverCheckbox" />
+      <label for="waiverCheckbox">I have read and understood the above and agree to participate on these terms.</label>
+    </label>
+
+    <div class="field">
+      <label for="guestName">Your name</label>
+      <input type="text" id="guestName" autocomplete="name" placeholder="Full name" />
+    </div>
+
+    <div class="field-row">
+      <div class="field"><label for="roomNumber">Room number</label><input type="text" id="roomNumber" autocomplete="off" placeholder="214" /></div>
+      <div class="field">
+        <label for="partySize">How many people</label>
+        <select id="partySize">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="contactMethod">Best way to reach you</label>
+      <select id="contactMethod">
+        <option value="WhatsApp">WhatsApp</option><option value="SMS">SMS</option><option value="In-app chat">In-app chat</option><option value="Email">Email</option><option value="Front desk">Front desk</option>
+      </select>
+      <p class="help">We'll use the contact details on file from your reservation.</p>
+    </div>
+
+    <div id="errorBox" class="error-msg hidden"></div>
+
+    <button class="btn btn-primary" id="reserveBtn" disabled>Reserve my spot</button>
+    <p class="footer-note"><span class="italic">Plans change — we know.</span> You can cancel any time from your confirmation page.</p>
+  </section>
+
+  <section class="card hidden" id="step-full">
+    <div class="state">
+      <div class="state-icon">🌴</div>
+      <h2>This session is <span class="italic">fully booked</span></h2>
+      <p>Join the waitlist and we'll reach out the moment a spot opens up.</p>
+    </div>
+
+    <div class="waiver">
+      <strong>Waiver</strong><br><br>
+      I understand that the Hammock Cocooning session is a wellness activity facilitated by an independent instructor and involves being suspended in an aerial hammock structure in an outdoor garden setting, combined with guided breathwork and sound bowl meditation. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health and have no medical conditions — including back or neck injuries, vertigo, respiratory conditions or pregnancy — that may be affected by suspension, breathwork or sound bowl vibrations. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.
+    </div>
+
+    <label class="waiver-box">
+      <input type="checkbox" id="wlWaiverCheckbox" />
+      <label for="wlWaiverCheckbox">I have read and understood the above and agree to participate on these terms.</label>
+    </label>
+
+    <div class="field"><label for="wlName">Your name</label><input type="text" id="wlName" autocomplete="name" placeholder="Full name" /></div>
+    <div class="field-row">
+      <div class="field"><label for="wlRoom">Room</label><input type="text" id="wlRoom" placeholder="214" /></div>
+      <div class="field"><label for="wlParty">How many</label><select id="wlParty"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+    </div>
+    <div class="field">
+      <label for="wlContactMethod">Best way to reach you</label>
+      <select id="wlContactMethod">
+        <option value="WhatsApp">WhatsApp</option><option value="SMS">SMS</option><option value="In-app chat">In-app chat</option><option value="Email">Email</option><option value="Front desk">Front desk</option>
+      </select>
+    </div>
+
+    <div id="wlErrorBox" class="error-msg hidden"></div>
+
+    <button class="btn btn-primary" id="waitlistBtn" disabled>Join the waitlist</button>
+    <button class="btn btn-secondary" id="backBtn" style="margin-top:10px;">Pick a different evening</button>
+  </section>
+
+  <section class="card hidden" id="step-confirmed">
+    <div class="state">
+      <div class="state-icon">🌴</div>
+      <h2>You're <span class="italic">all set</span></h2>
+      <p id="confirmText"></p>
+      <div class="state-meta" id="confirmMeta"></div>
+      <p style="margin-top:6px;">We can't wait to see you there.</p>
+      <p class="cancel-link-row" id="cancelLinkRow"></p>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Book another evening</button>
+    </div>
+  </section>
+
+  <section class="card hidden" id="step-waitlisted">
+    <div class="state">
+      <div class="state-icon">📝</div>
+      <h2>You're <span class="italic">on the list</span></h2>
+      <p id="waitlistedText"></p>
+      <p style="margin-top:14px;">If a spot opens, we'll reach out right away — you'll have two hours to confirm before it moves to the next guest.</p>
+      <p class="cancel-link-row" id="waitlistCancelRow"></p>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Done</button>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    Boardwalk Boutique Hotel Aruba <span class="italic">· Slow Summer 2026</span><br>
+    Need help? Stop by the front desk or message us through the app.
+  </p>
+</div>
+
+<script>
+const ACTIVITY     = "Hammock Cocooning";
+const SESSION_TIME = "7:00 PM";
+const LOCATION     = "Boardwalk Garden";
+const AVAIL_URL    = "/api/availability?activity=" + encodeURIComponent(ACTIVITY);
+const BOOK_URL     = "/api/book";
+const CANCEL_BASE  = "/api/cancel?id=";
+
+const MONTHS = [
+  { idx: 6, label: "July",   year: 2026 },
+  { idx: 7, label: "August", year: 2026 }
+];
+
+let selectedSession = null;
+let sessionsByIso = {};
+let currentMonthIdx = 0;
+
+function pad(n){return n<10?'0'+n:''+n}
+function isoDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function todayIso(){return isoDate(new Date())}
+function prettyDate(d){return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}
+function showError(b,m){b.textContent=m;b.classList.remove('hidden')}
+function clearError(b){b.classList.add('hidden')}
+
+async function loadSessions(){
+  try{
+    const res=await fetch(AVAIL_URL); if(!res.ok)throw new Error('fail');
+    const data=await res.json(); sessionsByIso=data.sessions||{};
+    const tm=new Date().getMonth(),ty=new Date().getFullYear();
+    const mi=MONTHS.findIndex(m=>m.idx===tm&&m.year===ty);
+    currentMonthIdx=mi>=0?mi:0;
+    renderCalendar();
+    document.getElementById('calNav').style.display='flex';
+    document.getElementById('calLegend').style.display='flex';
+  }catch(e){
+    document.getElementById('calendarContainer').innerHTML='<div class="loading-row" style="color:var(--danger)">We can\'t load availability right now. Please refresh or visit the front desk.</div>';
+  }
+}
+
+function renderCalendar(){
+  const wrap=document.getElementById('calendarContainer');
+  const today=todayIso(), m=MONTHS[currentMonthIdx];
+  document.getElementById('calNavLabel').innerHTML=m.label+' <span class="italic">'+m.year+'</span>';
+  document.getElementById('calPrev').disabled=currentMonthIdx<=0;
+  document.getElementById('calNext').disabled=currentMonthIdx>=MONTHS.length-1;
+  const fd=new Date(m.year,m.idx,1), ld=new Date(m.year,m.idx+1,0).getDate(), lead=fd.getDay();
+  let cells='';
+  for(let i=0;i<lead;i++)cells+='<div class="cal-day empty"></div>';
+  for(let day=1;day<=ld;day++){
+    const d=new Date(m.year,m.idx,day), iso=isoDate(d), isSun=d.getDay()===0, past=iso<today, s=sessionsByIso[iso];
+    if(!isSun||!s||past){cells+='<div class="cal-day regular"><span class="num">'+day+'</span></div>'}
+    else{
+      const left=s.spacesLeft; let cls='session ', pill;
+      if(left<=0){cls+='full';pill='<span class="pill">Waitlist</span>'}
+      else if(left<=2){cls+='low';pill='<span class="pill">'+left+' left</span>'}
+      else{cls+='open';pill='<span class="pill">'+left+' open</span>'}
+      if(iso===selectedSession)cls+=' selected';
+      cells+='<div class="cal-day '+cls+'" data-iso="'+iso+'"><span class="num">'+day+'</span>'+pill+'</div>';
+    }
+  }
+  wrap.innerHTML='<div class="cal-month"><div class="cal-weekdays"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div><div class="cal-grid">'+cells+'</div></div>';
+  wrap.querySelectorAll('.cal-day.session').forEach(el=>el.addEventListener('click',()=>selectSession(el.dataset.iso,el)));
+}
+
+document.getElementById('calPrev').addEventListener('click',()=>{if(currentMonthIdx>0){currentMonthIdx--;renderCalendar()}});
+document.getElementById('calNext').addEventListener('click',()=>{if(currentMonthIdx<MONTHS.length-1){currentMonthIdx++;renderCalendar()}});
+
+function selectSession(iso,el){
+  document.querySelectorAll('.cal-day.session').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected'); selectedSession=iso;
+  const s=sessionsByIso[iso], d=new Date(iso+'T19:00:00');
+  if(s.spacesLeft<=0){
+    document.getElementById('step-form').classList.add('hidden');
+    document.getElementById('step-full').classList.remove('hidden');
+    setTimeout(()=>document.getElementById('step-full').scrollIntoView({behavior:'smooth',block:'start'}),80);
+  }else{
+    document.getElementById('step-full').classList.add('hidden');
+    document.getElementById('step-form').classList.remove('hidden');
+    document.getElementById('formHeading').textContent='Reserve · '+prettyDate(d);
+    document.getElementById('spacesRemaining').innerHTML='<strong>'+s.spacesLeft+'</strong> '+(s.spacesLeft===1?'spot left':'spots left');
+    const sel=document.getElementById('partySize');
+    Array.from(sel.options).forEach(o=>{o.disabled=parseInt(o.value,10)>s.spacesLeft});
+    if(parseInt(sel.value,10)>s.spacesLeft)sel.value='1';
+    setTimeout(()=>document.getElementById('step-form').scrollIntoView({behavior:'smooth',block:'start'}),80);
+  }
+}
+
+function checkReserveEnabled(){
+  const w=document.getElementById('waiverCheckbox').checked;
+  const n=document.getElementById('guestName').value.trim();
+  const r=document.getElementById('roomNumber').value.trim();
+  document.getElementById('reserveBtn').disabled=!(w&&n&&r&&selectedSession);
+}
+['waiverCheckbox','guestName','roomNumber'].forEach(id=>{const e=document.getElementById(id);e.addEventListener('input',checkReserveEnabled);e.addEventListener('change',checkReserveEnabled)});
+
+function checkWaitlistEnabled(){
+  const w=document.getElementById('wlWaiverCheckbox').checked;
+  const n=document.getElementById('wlName').value.trim();
+  const r=document.getElementById('wlRoom').value.trim();
+  document.getElementById('waitlistBtn').disabled=!(w&&n&&r&&selectedSession);
+}
+['wlWaiverCheckbox','wlName','wlRoom'].forEach(id=>{const e=document.getElementById(id);e.addEventListener('input',checkWaitlistEnabled);e.addEventListener('change',checkWaitlistEnabled)});
+
+async function postBooking(p){
+  const res=await fetch(BOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});
+  const d=await res.json().catch(()=>({})); if(!res.ok||!d.ok)throw new Error(d.error||'Booking failed'); return d;
+}
+
+document.getElementById('reserveBtn').addEventListener('click',async()=>{
+  const btn=document.getElementById('reserveBtn'), eb=document.getElementById('errorBox');
+  clearError(eb); btn.disabled=true; btn.textContent='Reserving…';
+  const payload={activity:ACTIVITY,sessionDate:selectedSession,guestName:document.getElementById('guestName').value.trim(),roomNumber:document.getElementById('roomNumber').value.trim(),partySize:parseInt(document.getElementById('partySize').value,10),contactMethod:document.getElementById('contactMethod').value,waiverConfirmed:true};
+  try{
+    const r=await postBooking(payload); const d=new Date(selectedSession+'T19:00:00');
+    if(r.status==='Waitlisted'){
+      document.getElementById('waitlistedText').innerHTML='Position <strong>'+r.waitlistPosition+'</strong> for '+prettyDate(d)+'.';
+      if(r.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(r.bookingPageId)+'">Leave the waitlist</a>';
+      showStep('step-waitlisted');
+    }else{
+      document.getElementById('confirmText').innerHTML="Your spot is reserved for the <strong>"+ACTIVITY+"</strong>.";
+      document.getElementById('confirmMeta').innerHTML="<strong>"+prettyDate(d)+"</strong><br>"+SESSION_TIME+" · "+LOCATION;
+      if(r.bookingPageId)document.getElementById('cancelLinkRow').innerHTML='Plans change? <a href="'+CANCEL_BASE+encodeURIComponent(r.bookingPageId)+'">Cancel my spot</a>';
+      showStep('step-confirmed');
+    }
+  }catch(e){showError(eb,e.message||'Something went wrong — please try again or visit the front desk.');btn.disabled=false;btn.textContent='Reserve my spot'}
+});
+
+document.getElementById('waitlistBtn').addEventListener('click',async()=>{
+  const btn=document.getElementById('waitlistBtn'), eb=document.getElementById('wlErrorBox'); clearError(eb);
+  const n=document.getElementById('wlName').value.trim(), r=document.getElementById('wlRoom').value.trim();
+  const p=parseInt(document.getElementById('wlParty').value,10), cm=document.getElementById('wlContactMethod').value;
+  if(!n||!r){showError(eb,'Please fill in your name and room number.');return}
+  btn.disabled=true; btn.textContent='Joining…';
+  const payload={activity:ACTIVITY,sessionDate:selectedSession,guestName:n,roomNumber:r,partySize:p,contactMethod:cm,waiverConfirmed:true};
+  try{
+    const res=await postBooking(payload); const d=new Date(selectedSession+'T19:00:00');
+    document.getElementById('waitlistedText').innerHTML='Position <strong>'+(res.waitlistPosition||'—')+'</strong> for '+prettyDate(d)+'.';
+    if(res.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(res.bookingPageId)+'">Leave the waitlist</a>';
+    showStep('step-waitlisted');
+  }catch(e){showError(eb,e.message||'Something went wrong — please try again.');btn.disabled=false;btn.textContent='Join the waitlist'}
+});
+
+document.getElementById('backBtn').addEventListener('click',()=>{document.getElementById('step-full').classList.add('hidden');document.getElementById('step-sessions').scrollIntoView({behavior:'smooth',block:'start'})});
+
+function showStep(stepId){
+  ['step-sessions','step-form','step-full','step-confirmed','step-waitlisted'].forEach(s=>{const el=document.getElementById(s);if(s===stepId)el.classList.remove('hidden');else el.classList.add('hidden')});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+loadSessions();
+</script>
+</body>
+</html>
