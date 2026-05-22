@@ -7,7 +7,10 @@
     }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/sound-bath.html" },
-    { "source": "/sound-bath", "destination": "/sound-bath.html" }
+    { "source": "/",                   "destination": "/sound-bath.html" },
+    { "source": "/sound-bath",         "destination": "/sound-bath.html" },
+    { "source": "/golden-hour",        "destination": "/golden-hour.html" },
+    { "source": "/hammock-cocooning",  "destination": "/hammock-cocooning.html" },
+    { "source": "/garden-tour",        "destination": "/garden-tour.html" }
   ]
 }
