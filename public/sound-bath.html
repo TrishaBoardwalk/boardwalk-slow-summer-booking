@@ -25,8 +25,14 @@
     --ink-faint:   #7d9097;
     --paper:       #ffffff;
     --line:        #e3d6c8;
+
+    --ok:          #1d5d3a;
+    --ok-soft:     #d5e9d8;
+    --warn:        #8a5a14;
+    --warn-soft:   #f7e4be;
     --danger:      #8a2f2f;
     --danger-soft: #f3e1e1;
+
     --radius: 14px;
     --shadow: 0 1px 2px rgba(21,88,100,.05), 0 10px 28px rgba(21,88,100,.08);
   }
@@ -105,41 +111,102 @@
     margin: -6px 0 16px;
   }
 
-  /* SESSION LIST */
-  .session-list { display: flex; flex-direction: column; gap: 10px; }
-  .session {
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 16px;
+  /* CALENDAR */
+  .cal-month { margin-top: 22px; }
+  .cal-month:first-child { margin-top: 8px; }
+  .cal-month-label {
+    font-family: 'Noto Serif Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--teal);
+    margin: 0 0 10px 4px;
+    letter-spacing: .01em;
+  }
+  .cal-month-label .italic { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--bw-blue); }
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-day {
+    aspect-ratio: 1 / 1.05;
+    border-radius: 10px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--ink-faint);
+    background: transparent;
+    position: relative;
+    user-select: none;
+  }
+  .cal-day.empty { visibility: hidden; }
+  .cal-day.regular { color: var(--ink-faint); font-weight: 300; }
+  .cal-day.session {
     cursor: pointer;
-    transition: border-color .15s, background .15s, box-shadow .15s;
     background: var(--sand);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    transition: transform .08s, border-color .15s, box-shadow .15s;
   }
-  .session:hover:not(.disabled) { border-color: var(--bw-blue); }
-  .session.selected {
-    border-color: var(--bw-blue);
+  .cal-day.session:hover { border-color: var(--bw-blue); }
+  .cal-day.session.selected {
     background: var(--paper);
-    box-shadow: 0 0 0 3px var(--seafoam);
+    border-color: var(--bw-blue);
+    box-shadow: 0 0 0 2px var(--seafoam), 0 4px 14px rgba(0,179,194,.18);
+    transform: translateY(-1px);
   }
-  .session.disabled { opacity: .55; cursor: not-allowed; }
-  .s-date { font-weight: 500; color: var(--ink); font-size: 15.5px; font-family: 'Noto Serif Display', Georgia, serif; }
-  .s-meta { color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
-  .s-status {
-    font-size: 11.5px;
+  .cal-day .num {
+    font-family: 'Noto Serif Display', Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .cal-day.session .num { color: var(--teal); }
+  .cal-day .pill {
+    margin-top: 4px;
+    font-size: 9.5px;
     font-weight: 500;
-    padding: 4px 11px;
+    line-height: 1;
+    padding: 3px 6px;
     border-radius: 999px;
-    white-space: nowrap;
     letter-spacing: .04em;
+    white-space: nowrap;
   }
-  .pill-open    { background: var(--seafoam); color: var(--teal); }
-  .pill-low     { background: var(--beige); color: #8a5a14; }
-  .pill-full    { background: var(--danger-soft); color: var(--danger); }
-  .pill-loading { background: var(--sand); color: var(--ink-faint); }
+  .cal-day.open .pill    { background: var(--ok-soft); color: var(--ok); }
+  .cal-day.low .pill     { background: var(--warn-soft); color: var(--warn); }
+  .cal-day.full .pill    { background: var(--danger-soft); color: var(--danger); }
+  .cal-day.loading .pill { background: var(--sand); color: var(--ink-faint); }
+  .cal-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+  .cal-legend .dot {
+    display: inline-block;
+    width: 9px; height: 9px;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  .cal-legend .dot.ok   { background: var(--ok); }
+  .cal-legend .dot.low  { background: var(--warn); }
+  .cal-legend .dot.full { background: var(--danger); }
 
   /* DESCRIPTION */
   .description {
@@ -225,6 +292,12 @@
     -webkit-appearance: none;
     appearance: none;
   }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23155864' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
   .field input:focus, .field select:focus {
     outline: none;
     border-color: var(--bw-blue);
@@ -288,6 +361,16 @@
     max-width: 360px;
   }
   .state-meta strong { font-weight: 500; }
+  .cancel-link-row {
+    margin-top: 18px;
+    font-size: 13.5px;
+  }
+  .cancel-link-row a {
+    color: var(--ink-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .cancel-link-row a:hover { color: var(--danger); }
 
   .full-banner {
     background: var(--beige);
@@ -315,7 +398,11 @@
     background: var(--danger-soft);
     border-radius: 8px;
   }
-  .spaces-remaining { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .spaces-remaining {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: 4px 0 4px;
+  }
   .spaces-remaining strong { color: var(--bw-blue); font-weight: 500; }
   .loading-row {
     color: var(--ink-faint);
@@ -328,6 +415,8 @@
     h1 { font-size: 30px; }
     .field-row { grid-template-columns: 1fr; }
     .wrap { padding-top: 14px; }
+    .cal-day .num { font-size: 16px; }
+    .cal-day .pill { font-size: 9px; padding: 2px 5px; }
   }
 </style>
 </head>
@@ -341,12 +430,19 @@
     <p class="intro">Drift on a floating bed in the calm Caribbean Sea at sunset. Sound bowls send gentle vibrations across the water. Forty-five minutes. That's all you need to do.</p>
   </header>
 
-  <!-- STEP 1: SESSION PICKER -->
+  <!-- STEP 1: CALENDAR -->
   <section class="card" id="step-sessions">
     <h2>Choose your evening</h2>
-    <p class="lede">Every Thursday at 6:00pm on Boardwalk Beach. Six floating beds per session.</p>
-    <div class="session-list" id="sessionList">
+    <p class="lede">Every Thursday at 6:00pm on Boardwalk Beach. Tap an open evening — or join the waitlist for a full one.</p>
+
+    <div id="calendarContainer">
       <div class="loading-row">Checking availability…</div>
+    </div>
+
+    <div class="cal-legend" id="calLegend" style="display:none;">
+      <span><span class="dot ok"></span>Open</span>
+      <span><span class="dot low"></span>Filling up</span>
+      <span><span class="dot full"></span>Waitlist only</span>
     </div>
   </section>
 
@@ -392,29 +488,24 @@
       </div>
     </div>
 
-    <div class="field-row">
-      <div class="field">
-        <label for="contactMethod">Reach me on</label>
-        <select id="contactMethod">
-          <option>WhatsApp</option>
-          <option>SMS</option>
-          <option>In-app chat</option>
-          <option>Email</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="contactDetail">Number / email</label>
-        <input type="text" id="contactDetail" placeholder="+1 234 567 8910" />
-      </div>
+    <div class="field">
+      <label for="contactMethod">Best way to reach you</label>
+      <select id="contactMethod">
+        <option value="WhatsApp">WhatsApp</option>
+        <option value="SMS">SMS</option>
+        <option value="In-app chat">In-app chat</option>
+        <option value="Email">Email</option>
+        <option value="Front desk">Front desk</option>
+      </select>
+      <p class="help">We'll use the contact details on file from your reservation.</p>
     </div>
-    <p class="help">We'll send a gentle reminder the morning of and a quick note after — through Duve, your way.</p>
 
     <div id="errorBox" class="error-msg hidden"></div>
 
     <button class="btn btn-primary" id="reserveBtn" disabled>Reserve my spot</button>
 
     <p class="footer-note">
-      <span class="italic">Plans change — we know.</span> Cancellations are easy: reply to your reminder or stop by the front desk.
+      <span class="italic">Plans change — we know.</span> You can cancel any time from your confirmation page.
     </p>
   </section>
 
@@ -438,17 +529,15 @@
         <select id="wlParty"><option>1</option><option>2</option><option>3</option><option>4</option></select>
       </div>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label for="wlContactMethod">Reach me on</label>
-        <select id="wlContactMethod">
-          <option>WhatsApp</option><option>SMS</option><option>In-app chat</option><option>Email</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="wlContact">Number / email</label>
-        <input type="text" id="wlContact" placeholder="+1 234 567 8910" />
-      </div>
+    <div class="field">
+      <label for="wlContactMethod">Best way to reach you</label>
+      <select id="wlContactMethod">
+        <option value="WhatsApp">WhatsApp</option>
+        <option value="SMS">SMS</option>
+        <option value="In-app chat">In-app chat</option>
+        <option value="Email">Email</option>
+        <option value="Front desk">Front desk</option>
+      </select>
     </div>
 
     <div id="wlErrorBox" class="error-msg hidden"></div>
@@ -465,7 +554,8 @@
       <p id="confirmText"></p>
       <div class="state-meta" id="confirmMeta"></div>
       <p style="margin-top:6px;">We can't wait to see you there.</p>
-      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:24px;max-width:260px;margin-left:auto;margin-right:auto;">Book another evening</button>
+      <p class="cancel-link-row" id="cancelLinkRow"></p>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Book another evening</button>
     </div>
   </section>
 
@@ -476,7 +566,8 @@
       <h2>You're <span class="italic">on the list</span></h2>
       <p id="waitlistedText"></p>
       <p style="margin-top:14px;">If a spot opens, we'll reach out right away — you'll have two hours to confirm before it moves to the next guest.</p>
-      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:24px;max-width:260px;margin-left:auto;margin-right:auto;">Done</button>
+      <p class="cancel-link-row" id="waitlistCancelRow"></p>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Done</button>
     </div>
   </section>
 
@@ -494,116 +585,149 @@ const ACTIVITY     = "Floating Ocean Sound Bath";
 const SESSION_TIME = "6:00 PM";
 const AVAIL_URL    = "/api/availability?activity=" + encodeURIComponent(ACTIVITY);
 const BOOK_URL     = "/api/book";
+const CANCEL_BASE  = "/api/cancel?id=";
+
+const MONTHS = [
+  { idx: 5, label: "June",   year: 2026 },
+  { idx: 6, label: "July",   year: 2026 },
+  { idx: 7, label: "August", year: 2026 }
+];
 
 /* =========================================================================
    STATE
    ========================================================================= */
 let selectedSession = null;
-let sessions = []; // [{ iso, dateObj, confirmed, spacesLeft, capacity }]
+let sessionsByIso = {}; // iso -> { confirmed, spacesLeft, capacity, waitlistCount }
 
 /* =========================================================================
    HELPERS
    ========================================================================= */
 function pad(n){ return n < 10 ? '0' + n : '' + n; }
 function isoDate(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+function todayIso(){ return isoDate(new Date()); }
 function prettyDate(d){
   return d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
 }
-function showError(box, msg){
-  box.textContent = msg;
-  box.classList.remove('hidden');
+function shortDate(d){
+  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
 }
+function showError(box, msg){ box.textContent = msg; box.classList.remove('hidden'); }
 function clearError(box){ box.classList.add('hidden'); }
 
 /* =========================================================================
-   LOAD SESSIONS
+   LOAD + RENDER CALENDAR
    ========================================================================= */
 async function loadSessions(){
-  const list = document.getElementById('sessionList');
   try {
     const res = await fetch(AVAIL_URL);
     if (!res.ok) throw new Error('availability fetch failed');
     const data = await res.json();
-    const today = isoDate(new Date());
-    sessions = Object.entries(data.sessions || {})
-      .filter(([iso]) => iso >= today)
-      .sort()
-      .map(([iso, info]) => ({ iso, dateObj: new Date(iso + 'T18:00:00'), ...info }));
-    renderSessions();
+    sessionsByIso = data.sessions || {};
+    renderCalendar();
+    document.getElementById('calLegend').style.display = 'flex';
   } catch (e) {
-    list.innerHTML = '<div class="loading-row" style="color:var(--danger)">We can\'t load sessions right now. Please refresh or visit the front desk.</div>';
+    document.getElementById('calendarContainer').innerHTML =
+      '<div class="loading-row" style="color:var(--danger)">We can\'t load availability right now. Please refresh or visit the front desk.</div>';
   }
 }
 
-function renderSessions(){
-  const list = document.getElementById('sessionList');
-  if (sessions.length === 0) {
-    list.innerHTML = '<div class="loading-row">No more sessions this summer — see you next year 🌴</div>';
-    return;
-  }
-  list.innerHTML = sessions.map(s => {
-    const left = s.spacesLeft;
-    const isFull = left <= 0;
-    let pill;
-    if (isFull) pill = '<span class="s-status pill-full">Fully booked</span>';
-    else if (left <= 2) pill = '<span class="s-status pill-low">' + left + ' left</span>';
-    else pill = '<span class="s-status pill-open">' + left + ' spaces</span>';
-    return `
-      <div class="session" data-iso="${s.iso}">
-        <div>
-          <div class="s-date">${prettyDate(s.dateObj)}</div>
-          <div class="s-meta">${SESSION_TIME} · Boardwalk Beach</div>
+function renderCalendar(){
+  const wrap = document.getElementById('calendarContainer');
+  const today = todayIso();
+  const out = [];
+  for (const m of MONTHS) {
+    const firstDay = new Date(m.year, m.idx, 1);
+    const lastDate = new Date(m.year, m.idx + 1, 0).getDate();
+    const leading = firstDay.getDay(); // 0=Sun
+
+    let cells = '';
+    for (let i = 0; i < leading; i++) cells += '<div class="cal-day empty"></div>';
+
+    for (let day = 1; day <= lastDate; day++) {
+      const d = new Date(m.year, m.idx, day);
+      const iso = isoDate(d);
+      const isThursday = d.getDay() === 4;
+      const isPast = iso < today;
+      const session = sessionsByIso[iso];
+
+      if (!isThursday || !session || isPast) {
+        cells += '<div class="cal-day regular"><span class="num">' + day + '</span></div>';
+      } else {
+        const left = session.spacesLeft;
+        let cls = 'session ';
+        let pill;
+        if (left <= 0) {
+          cls += 'full';
+          pill = '<span class="pill">Waitlist</span>';
+        } else if (left <= 2) {
+          cls += 'low';
+          pill = '<span class="pill">' + left + ' left</span>';
+        } else {
+          cls += 'open';
+          pill = '<span class="pill">' + left + ' open</span>';
+        }
+        cells += '<div class="cal-day ' + cls + '" data-iso="' + iso + '"><span class="num">' + day + '</span>' + pill + '</div>';
+      }
+    }
+
+    out.push(`
+      <div class="cal-month">
+        <div class="cal-month-label">${m.label} <span class="italic">${m.year}</span></div>
+        <div class="cal-weekdays">
+          <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
         </div>
-        ${pill}
+        <div class="cal-grid">${cells}</div>
       </div>
-    `;
-  }).join('');
-  list.querySelectorAll('.session').forEach(el => {
+    `);
+  }
+  wrap.innerHTML = out.join('');
+
+  // wire clicks on session days
+  wrap.querySelectorAll('.cal-day.session').forEach(el => {
     el.addEventListener('click', () => selectSession(el.dataset.iso, el));
   });
 }
 
 function selectSession(iso, el){
-  document.querySelectorAll('.session').forEach(s => s.classList.remove('selected'));
+  document.querySelectorAll('.cal-day.session').forEach(s => s.classList.remove('selected'));
   el.classList.add('selected');
   selectedSession = iso;
-  const s = sessions.find(x => x.iso === iso);
-  if (!s) return;
 
-  document.getElementById('formHeading').textContent = 'Reserve · ' + prettyDate(s.dateObj);
+  const session = sessionsByIso[iso];
+  const d = new Date(iso + 'T18:00:00');
 
-  if (s.spacesLeft <= 0) {
+  if (session.spacesLeft <= 0) {
     document.getElementById('step-form').classList.add('hidden');
     document.getElementById('step-full').classList.remove('hidden');
     document.getElementById('fullBanner').textContent =
-      prettyDate(s.dateObj) + ' · ' + SESSION_TIME + ' — all six beds reserved';
+      prettyDate(d) + ' · ' + SESSION_TIME + ' — all six beds reserved';
     setTimeout(()=>document.getElementById('step-full').scrollIntoView({behavior:'smooth',block:'start'}), 80);
   } else {
     document.getElementById('step-full').classList.add('hidden');
     document.getElementById('step-form').classList.remove('hidden');
-    const sr = document.getElementById('spacesRemaining');
-    sr.innerHTML = '<strong>' + s.spacesLeft + '</strong> of ' + s.capacity + ' floating beds remaining';
+    document.getElementById('formHeading').textContent = 'Reserve · ' + prettyDate(d);
+    document.getElementById('spacesRemaining').innerHTML =
+      '<strong>' + session.spacesLeft + '</strong> ' +
+      (session.spacesLeft === 1 ? 'spot left' : 'spots left');
 
-    // Trim party size dropdown to what fits
     const sel = document.getElementById('partySize');
-    Array.from(sel.options).forEach(o => { o.disabled = parseInt(o.value, 10) > s.spacesLeft; });
-    if (parseInt(sel.value, 10) > s.spacesLeft) sel.value = '1';
+    Array.from(sel.options).forEach(o => { o.disabled = parseInt(o.value, 10) > session.spacesLeft; });
+    if (parseInt(sel.value, 10) > session.spacesLeft) sel.value = '1';
 
     setTimeout(()=>document.getElementById('step-form').scrollIntoView({behavior:'smooth',block:'start'}), 80);
   }
 }
 
 /* =========================================================================
-   WAIVER GATE
+   WAIVER GATE — Reserve button stays disabled until all required fields ok
    ========================================================================= */
 function checkReserveEnabled(){
   const waiver  = document.getElementById('waiverCheckbox').checked;
   const name    = document.getElementById('guestName').value.trim();
   const room    = document.getElementById('roomNumber').value.trim();
-  const contact = document.getElementById('contactDetail').value.trim();
-  document.getElementById('reserveBtn').disabled = !(waiver && name && room && contact);
+  document.getElementById('reserveBtn').disabled = !(waiver && name && room && selectedSession);
 }
-['waiverCheckbox','guestName','roomNumber','contactDetail'].forEach(id => {
+['waiverCheckbox','guestName','roomNumber'].forEach(id => {
   const el = document.getElementById(id);
   el.addEventListener('input', checkReserveEnabled);
   el.addEventListener('change', checkReserveEnabled);
@@ -639,7 +763,6 @@ document.getElementById('reserveBtn').addEventListener('click', async () => {
     roomNumber:      document.getElementById('roomNumber').value.trim(),
     partySize:       parseInt(document.getElementById('partySize').value, 10),
     contactMethod:   document.getElementById('contactMethod').value,
-    contactDetail:   document.getElementById('contactDetail').value.trim(),
     waiverConfirmed: true
   };
 
@@ -647,22 +770,24 @@ document.getElementById('reserveBtn').addEventListener('click', async () => {
     const result = await postBooking(payload);
     const d = new Date(selectedSession + 'T18:00:00');
     if (result.status === 'Waitlisted') {
-      // Server downgraded to waitlist (race condition or capacity drift)
       document.getElementById('waitlistedText').innerHTML =
         'Position <strong>' + result.waitlistPosition + '</strong> for ' + prettyDate(d) + '.';
-      document.getElementById('step-sessions').classList.add('hidden');
-      document.getElementById('step-form').classList.add('hidden');
-      document.getElementById('step-waitlisted').classList.remove('hidden');
+      if (result.bookingPageId) {
+        document.getElementById('waitlistCancelRow').innerHTML =
+          '<a href="' + CANCEL_BASE + encodeURIComponent(result.bookingPageId) + '">Leave the waitlist</a>';
+      }
+      showStep('step-waitlisted');
     } else {
       document.getElementById('confirmText').innerHTML =
         "Your spot is reserved for the <strong>" + ACTIVITY + "</strong>.";
       document.getElementById('confirmMeta').innerHTML =
         "<strong>" + prettyDate(d) + "</strong><br>" + SESSION_TIME + " · Boardwalk Beach";
-      document.getElementById('step-sessions').classList.add('hidden');
-      document.getElementById('step-form').classList.add('hidden');
-      document.getElementById('step-confirmed').classList.remove('hidden');
+      if (result.bookingPageId) {
+        document.getElementById('cancelLinkRow').innerHTML =
+          'Plans change? <a href="' + CANCEL_BASE + encodeURIComponent(result.bookingPageId) + '">Cancel my spot</a>';
+      }
+      showStep('step-confirmed');
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) {
     showError(errBox, e.message || "Something went wrong — please try again or visit the front desk.");
     btn.disabled = false;
@@ -682,17 +807,14 @@ document.getElementById('waitlistBtn').addEventListener('click', async () => {
   const room    = document.getElementById('wlRoom').value.trim();
   const party   = parseInt(document.getElementById('wlParty').value, 10);
   const cm      = document.getElementById('wlContactMethod').value;
-  const contact = document.getElementById('wlContact').value.trim();
-  if (!name || !room || !contact) {
-    showError(errBox, "Please fill in name, room, and how to reach you.");
+  if (!name || !room) {
+    showError(errBox, "Please fill in your name and room number.");
     return;
   }
 
   btn.disabled = true;
   btn.textContent = 'Joining…';
 
-  // The server enforces capacity — sending the booking endpoint with a clearly-full session
-  // will route to waitlist automatically.
   const payload = {
     activity:        ACTIVITY,
     sessionDate:     selectedSession,
@@ -700,7 +822,6 @@ document.getElementById('waitlistBtn').addEventListener('click', async () => {
     roomNumber:      room,
     partySize:       party,
     contactMethod:   cm,
-    contactDetail:   contact,
     waiverConfirmed: true
   };
 
@@ -709,10 +830,11 @@ document.getElementById('waitlistBtn').addEventListener('click', async () => {
     const d = new Date(selectedSession + 'T18:00:00');
     document.getElementById('waitlistedText').innerHTML =
       "Position <strong>" + (result.waitlistPosition || '—') + "</strong> for " + prettyDate(d) + ".";
-    document.getElementById('step-sessions').classList.add('hidden');
-    document.getElementById('step-full').classList.add('hidden');
-    document.getElementById('step-waitlisted').classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (result.bookingPageId) {
+      document.getElementById('waitlistCancelRow').innerHTML =
+        '<a href="' + CANCEL_BASE + encodeURIComponent(result.bookingPageId) + '">Leave the waitlist</a>';
+    }
+    showStep('step-waitlisted');
   } catch (e) {
     showError(errBox, e.message || "Something went wrong — please try again.");
     btn.disabled = false;
@@ -724,6 +846,15 @@ document.getElementById('backBtn').addEventListener('click', () => {
   document.getElementById('step-full').classList.add('hidden');
   document.getElementById('step-sessions').scrollIntoView({ behavior:'smooth', block:'start' });
 });
+
+function showStep(stepId){
+  ['step-sessions','step-form','step-full','step-confirmed','step-waitlisted'].forEach(s => {
+    const el = document.getElementById(s);
+    if (s === stepId) el.classList.remove('hidden');
+    else el.classList.add('hidden');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 /* =========================================================================
    INIT
