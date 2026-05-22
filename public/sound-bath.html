@@ -112,8 +112,44 @@
   }
 
   /* CALENDAR */
-  .cal-month { margin-top: 22px; }
-  .cal-month:first-child { margin-top: 8px; }
+  .cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 4px 0 14px;
+    padding: 4px 0;
+  }
+  .cal-nav-label {
+    font-family: 'Noto Serif Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 19px;
+    color: var(--teal);
+    text-align: center;
+    flex: 1;
+    letter-spacing: .01em;
+  }
+  .cal-nav-label .italic { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--bw-blue); }
+  .cal-nav-btn {
+    background: var(--sand);
+    border: 1px solid var(--line);
+    color: var(--teal);
+    font-size: 22px;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    cursor: pointer;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .12s, border-color .12s, opacity .12s;
+    font-family: inherit;
+    padding: 0;
+  }
+  .cal-nav-btn:hover:not(:disabled) { background: var(--seafoam); border-color: var(--bw-blue); }
+  .cal-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .cal-month { margin-top: 4px; }
   .cal-month-label {
     font-family: 'Noto Serif Display', Georgia, serif;
     font-weight: 400;
@@ -433,7 +469,12 @@
   <!-- STEP 1: CALENDAR -->
   <section class="card" id="step-sessions">
     <h2>Choose your evening</h2>
-    <p class="lede">Every Thursday at 6:00pm on Boardwalk Beach. Tap an open evening — or join the waitlist for a full one.</p>
+
+    <div class="cal-nav" id="calNav" style="display:none;">
+      <button class="cal-nav-btn" id="calPrev" aria-label="Previous month">‹</button>
+      <div class="cal-nav-label" id="calNavLabel"></div>
+      <button class="cal-nav-btn" id="calNext" aria-label="Next month">›</button>
+    </div>
 
     <div id="calendarContainer">
       <div class="loading-row">Checking availability…</div>
@@ -515,11 +556,6 @@
       <div class="state-icon">🌊</div>
       <h2>This session is <span class="italic">fully booked</span></h2>
       <p>Join the waitlist and we'll reach out the moment a spot opens up.</p>
-    </div>
-    <div class="full-banner" id="fullBanner"></div>
-
-    <div class="description" style="margin-top:18px;">
-      Floating beds, waist-deep warm water, sunset overhead. Maria places sound bowls around you while you drift. <em>Forty-five minutes of slow.</em> Wear swimwear or anything light.
     </div>
 
     <div class="waiver">
@@ -612,6 +648,7 @@ const MONTHS = [
    ========================================================================= */
 let selectedSession = null;
 let sessionsByIso = {}; // iso -> { confirmed, spacesLeft, capacity, waitlistCount }
+let currentMonthIdx = 0; // index into MONTHS — defaults to current month if it's June/Jul/Aug, else June
 
 /* =========================================================================
    HELPERS
@@ -637,7 +674,16 @@ async function loadSessions(){
     if (!res.ok) throw new Error('availability fetch failed');
     const data = await res.json();
     sessionsByIso = data.sessions || {};
+
+    // Default to the current real-world month if it's one of our active months,
+    // otherwise start at the first (June).
+    const todayMonthIdx = new Date().getMonth();
+    const todayYear     = new Date().getFullYear();
+    const matchIdx = MONTHS.findIndex(m => m.idx === todayMonthIdx && m.year === todayYear);
+    currentMonthIdx = matchIdx >= 0 ? matchIdx : 0;
+
     renderCalendar();
+    document.getElementById('calNav').style.display = 'flex';
     document.getElementById('calLegend').style.display = 'flex';
   } catch (e) {
     document.getElementById('calendarContainer').innerHTML =
@@ -648,59 +694,70 @@ async function loadSessions(){
 function renderCalendar(){
   const wrap = document.getElementById('calendarContainer');
   const today = todayIso();
-  const out = [];
-  for (const m of MONTHS) {
-    const firstDay = new Date(m.year, m.idx, 1);
-    const lastDate = new Date(m.year, m.idx + 1, 0).getDate();
-    const leading = firstDay.getDay(); // 0=Sun
+  const m = MONTHS[currentMonthIdx];
 
-    let cells = '';
-    for (let i = 0; i < leading; i++) cells += '<div class="cal-day empty"></div>';
+  // Update nav label + button enabled state
+  document.getElementById('calNavLabel').innerHTML = m.label + ' <span class="italic">' + m.year + '</span>';
+  document.getElementById('calPrev').disabled = currentMonthIdx <= 0;
+  document.getElementById('calNext').disabled = currentMonthIdx >= MONTHS.length - 1;
 
-    for (let day = 1; day <= lastDate; day++) {
-      const d = new Date(m.year, m.idx, day);
-      const iso = isoDate(d);
-      const isThursday = d.getDay() === 4;
-      const isPast = iso < today;
-      const session = sessionsByIso[iso];
+  const firstDay = new Date(m.year, m.idx, 1);
+  const lastDate = new Date(m.year, m.idx + 1, 0).getDate();
+  const leading  = firstDay.getDay(); // 0=Sun
 
-      if (!isThursday || !session || isPast) {
-        cells += '<div class="cal-day regular"><span class="num">' + day + '</span></div>';
+  let cells = '';
+  for (let i = 0; i < leading; i++) cells += '<div class="cal-day empty"></div>';
+
+  for (let day = 1; day <= lastDate; day++) {
+    const d = new Date(m.year, m.idx, day);
+    const iso = isoDate(d);
+    const isThursday = d.getDay() === 4;
+    const isPast = iso < today;
+    const session = sessionsByIso[iso];
+
+    if (!isThursday || !session || isPast) {
+      cells += '<div class="cal-day regular"><span class="num">' + day + '</span></div>';
+    } else {
+      const left = session.spacesLeft;
+      let cls = 'session ';
+      let pill;
+      if (left <= 0) {
+        cls += 'full';
+        pill = '<span class="pill">Waitlist</span>';
+      } else if (left <= 2) {
+        cls += 'low';
+        pill = '<span class="pill">' + left + ' left</span>';
       } else {
-        const left = session.spacesLeft;
-        let cls = 'session ';
-        let pill;
-        if (left <= 0) {
-          cls += 'full';
-          pill = '<span class="pill">Waitlist</span>';
-        } else if (left <= 2) {
-          cls += 'low';
-          pill = '<span class="pill">' + left + ' left</span>';
-        } else {
-          cls += 'open';
-          pill = '<span class="pill">' + left + ' open</span>';
-        }
-        cells += '<div class="cal-day ' + cls + '" data-iso="' + iso + '"><span class="num">' + day + '</span>' + pill + '</div>';
+        cls += 'open';
+        pill = '<span class="pill">' + left + ' open</span>';
       }
+      if (iso === selectedSession) cls += ' selected';
+      cells += '<div class="cal-day ' + cls + '" data-iso="' + iso + '"><span class="num">' + day + '</span>' + pill + '</div>';
     }
-
-    out.push(`
-      <div class="cal-month">
-        <div class="cal-month-label">${m.label} <span class="italic">${m.year}</span></div>
-        <div class="cal-weekdays">
-          <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
-        </div>
-        <div class="cal-grid">${cells}</div>
-      </div>
-    `);
   }
-  wrap.innerHTML = out.join('');
+
+  wrap.innerHTML = `
+    <div class="cal-month">
+      <div class="cal-weekdays">
+        <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+      </div>
+      <div class="cal-grid">${cells}</div>
+    </div>
+  `;
 
   // wire clicks on session days
   wrap.querySelectorAll('.cal-day.session').forEach(el => {
     el.addEventListener('click', () => selectSession(el.dataset.iso, el));
   });
 }
+
+// Prev / Next month buttons
+document.getElementById('calPrev').addEventListener('click', () => {
+  if (currentMonthIdx > 0) { currentMonthIdx--; renderCalendar(); }
+});
+document.getElementById('calNext').addEventListener('click', () => {
+  if (currentMonthIdx < MONTHS.length - 1) { currentMonthIdx++; renderCalendar(); }
+});
 
 function selectSession(iso, el){
   document.querySelectorAll('.cal-day.session').forEach(s => s.classList.remove('selected'));
@@ -713,8 +770,6 @@ function selectSession(iso, el){
   if (session.spacesLeft <= 0) {
     document.getElementById('step-form').classList.add('hidden');
     document.getElementById('step-full').classList.remove('hidden');
-    document.getElementById('fullBanner').textContent =
-      prettyDate(d) + ' · ' + SESSION_TIME + ' — all six beds reserved';
     setTimeout(()=>document.getElementById('step-full').scrollIntoView({behavior:'smooth',block:'start'}), 80);
   } else {
     document.getElementById('step-full').classList.add('hidden');
