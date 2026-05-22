@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/check-offer-expiry",
+      "schedule": "*/15 * * * *"
+    }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/sound-bath.html" },
+    { "source": "/sound-bath", "destination": "/sound-bath.html" }
+  ]
+}
