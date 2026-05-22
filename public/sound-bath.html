@@ -518,6 +518,20 @@
     </div>
     <div class="full-banner" id="fullBanner"></div>
 
+    <div class="description" style="margin-top:18px;">
+      Floating beds, waist-deep warm water, sunset overhead. Maria places sound bowls around you while you drift. <em>Forty-five minutes of slow.</em> Wear swimwear or anything light.
+    </div>
+
+    <div class="waiver">
+      <strong>Waiver</strong><br><br>
+      I understand that the Floating Ocean Sound Bath is a wellness activity facilitated by an independent instructor and involves floating on the ocean surface using a floating bed in waist-deep water at sunset. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health, am comfortable in open water, and have no medical conditions — including heart conditions, respiratory conditions or pregnancy — that may be affected by this activity. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.
+    </div>
+
+    <label class="waiver-box">
+      <input type="checkbox" id="wlWaiverCheckbox" />
+      <label for="wlWaiverCheckbox">I have read and understood the above and agree to participate on these terms.</label>
+    </label>
+
     <div class="field">
       <label for="wlName">Your name</label>
       <input type="text" id="wlName" autocomplete="name" placeholder="Full name" />
@@ -542,7 +556,7 @@
 
     <div id="wlErrorBox" class="error-msg hidden"></div>
 
-    <button class="btn btn-primary" id="waitlistBtn">Join the waitlist</button>
+    <button class="btn btn-primary" id="waitlistBtn" disabled>Join the waitlist</button>
     <button class="btn btn-secondary" id="backBtn" style="margin-top:10px;">Pick a different evening</button>
   </section>
 
@@ -719,7 +733,7 @@ function selectSession(iso, el){
 }
 
 /* =========================================================================
-   WAIVER GATE — Reserve button stays disabled until all required fields ok
+   WAIVER GATE — Reserve + Waitlist buttons stay disabled until waiver + fields ok
    ========================================================================= */
 function checkReserveEnabled(){
   const waiver  = document.getElementById('waiverCheckbox').checked;
@@ -731,6 +745,18 @@ function checkReserveEnabled(){
   const el = document.getElementById(id);
   el.addEventListener('input', checkReserveEnabled);
   el.addEventListener('change', checkReserveEnabled);
+});
+
+function checkWaitlistEnabled(){
+  const waiver = document.getElementById('wlWaiverCheckbox').checked;
+  const name   = document.getElementById('wlName').value.trim();
+  const room   = document.getElementById('wlRoom').value.trim();
+  document.getElementById('waitlistBtn').disabled = !(waiver && name && room && selectedSession);
+}
+['wlWaiverCheckbox','wlName','wlRoom'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', checkWaitlistEnabled);
+  el.addEventListener('change', checkWaitlistEnabled);
 });
 
 /* =========================================================================
