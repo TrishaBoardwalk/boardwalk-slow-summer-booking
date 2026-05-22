@@ -1,0 +1,13 @@
+{
+  "name": "boardwalk-slow-summer-booking",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Slow Summer wellness activity booking engine for Boardwalk Boutique Hotel Aruba — guest-facing static pages on Vercel, serverless API writes to Notion.",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  }
+}
