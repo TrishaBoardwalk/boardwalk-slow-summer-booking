@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Floating Ocean Sound Bath · Boardwalk Aruba</title>
+<meta name="theme-color" content="#155864" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500&family=Noto+Serif+Display:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    /* Boardwalk Brandbook v3.2 */
+    --sand:        #f2ebe2;
+    --beige:       #e9dace;
+    --palapa:      #ccb2a8;
+    --seafoam:     #dbeced;
+    --bw-blue:     #00b3c2;
+    --teal:        #155864;
+    --teal-soft:   #e3eef0;
+
+    --ink:         #155864;
+    --ink-soft:    #496c74;
+    --ink-faint:   #7d9097;
+    --paper:       #ffffff;
+    --line:        #e3d6c8;
+    --danger:      #8a2f2f;
+    --danger-soft: #f3e1e1;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(21,88,100,.05), 0 10px 28px rgba(21,88,100,.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Karla', system-ui, -apple-system, sans-serif;
+    font-weight: 300;
+    background: var(--sand);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 580px; margin: 0 auto; padding: 22px 18px 64px; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(170deg, #155864 0%, #1d7a86 100%);
+    color: var(--sand);
+    border-radius: var(--radius);
+    padding: 30px 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(0,179,194,.35), transparent 55%),
+      radial-gradient(circle at 15% 90%, rgba(219,236,237,.18), transparent 55%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: .24em;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--seafoam);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: 'Noto Serif Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    color: var(--sand);
+  }
+  h1 .italic { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--seafoam); }
+  .intro {
+    font-size: 15px;
+    color: rgba(242,235,226,.88);
+    margin: 0;
+    max-width: 480px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+    margin-top: 18px;
+  }
+  .card h2 {
+    font-family: 'Noto Serif Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 24px;
+    margin: 0 0 14px;
+    color: var(--teal);
+  }
+  .lede {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: -6px 0 16px;
+  }
+
+  /* SESSION LIST */
+  .session-list { display: flex; flex-direction: column; gap: 10px; }
+  .session {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+    background: var(--sand);
+  }
+  .session:hover:not(.disabled) { border-color: var(--bw-blue); }
+  .session.selected {
+    border-color: var(--bw-blue);
+    background: var(--paper);
+    box-shadow: 0 0 0 3px var(--seafoam);
+  }
+  .session.disabled { opacity: .55; cursor: not-allowed; }
+  .s-date { font-weight: 500; color: var(--ink); font-size: 15.5px; font-family: 'Noto Serif Display', Georgia, serif; }
+  .s-meta { color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
+  .s-status {
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 4px 11px;
+    border-radius: 999px;
+    white-space: nowrap;
+    letter-spacing: .04em;
+  }
+  .pill-open    { background: var(--seafoam); color: var(--teal); }
+  .pill-low     { background: var(--beige); color: #8a5a14; }
+  .pill-full    { background: var(--danger-soft); color: var(--danger); }
+  .pill-loading { background: var(--sand); color: var(--ink-faint); }
+
+  /* DESCRIPTION */
+  .description {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    padding: 14px 18px;
+    background: var(--seafoam);
+    border-left: 3px solid var(--bw-blue);
+    border-radius: 8px;
+    margin-top: 16px;
+  }
+  .description em {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    color: var(--teal);
+    font-weight: 400;
+  }
+
+  /* WAIVER */
+  .waiver {
+    background: var(--sand);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .waiver strong { color: var(--ink); font-weight: 500; }
+  .waiver-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .waiver-box:has(input:checked) {
+    border-color: var(--bw-blue);
+    background: var(--seafoam);
+  }
+  .waiver-box input {
+    margin-top: 3px;
+    accent-color: var(--bw-blue);
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+  }
+  .waiver-box label {
+    font-size: 13.5px;
+    color: var(--ink);
+    cursor: pointer;
+    flex: 1;
+    font-weight: 400;
+  }
+
+  /* FIELDS */
+  .field { margin-top: 14px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--teal);
+    margin-bottom: 6px;
+    letter-spacing: .04em;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    font-weight: 300;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--bw-blue);
+    box-shadow: 0 0 0 3px var(--seafoam);
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .help { font-size: 12px; color: var(--ink-faint); margin-top: 6px; }
+
+  /* BUTTONS */
+  .btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform .05s, background .15s, opacity .15s;
+    letter-spacing: .03em;
+  }
+  .btn-primary { background: var(--teal); color: var(--sand); }
+  .btn-primary:hover:not(:disabled) { background: #0e4651; }
+  .btn-primary:active:not(:disabled) { transform: translateY(1px); }
+  .btn-primary:disabled {
+    background: var(--palapa);
+    color: rgba(255,255,255,.85);
+    cursor: not-allowed;
+    opacity: .85;
+  }
+  .btn-secondary {
+    background: var(--paper);
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+  }
+  .btn-secondary:hover:not(:disabled) { background: var(--seafoam); }
+
+  /* CONFIRMATION STATES */
+  .state {
+    text-align: center;
+    padding: 26px 18px;
+  }
+  .state h2 {
+    font-family: 'Noto Serif Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--teal);
+    margin: 10px 0 10px;
+  }
+  .state h2 .italic { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--bw-blue); }
+  .state p { color: var(--ink-soft); font-size: 15px; margin: 0 auto; max-width: 420px; }
+  .state-icon { font-size: 38px; line-height: 1; }
+  .state-meta {
+    background: var(--seafoam);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 16px auto;
+    font-size: 14px;
+    color: var(--teal);
+    max-width: 360px;
+  }
+  .state-meta strong { font-weight: 500; }
+
+  .full-banner {
+    background: var(--beige);
+    color: #8a5a14;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    margin-top: 14px;
+    text-align: center;
+  }
+  .hidden { display: none !important; }
+  .footer-note {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.55;
+  }
+  .footer-note .italic { font-family: 'Playfair Display', Georgia, serif; font-style: italic; }
+  .error-msg {
+    color: var(--danger);
+    font-size: 13.5px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--danger-soft);
+    border-radius: 8px;
+  }
+  .spaces-remaining { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .spaces-remaining strong { color: var(--bw-blue); font-weight: 500; }
+  .loading-row {
+    color: var(--ink-faint);
+    font-size: 14px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 30px; }
+    .field-row { grid-template-columns: 1fr; }
+    .wrap { padding-top: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="eyebrow">Slow Summer · Boardwalk Aruba</p>
+    <h1>Floating Ocean<br/><span class="italic">Sound Bath</span></h1>
+    <p class="intro">Drift on a floating bed in the calm Caribbean Sea at sunset. Sound bowls send gentle vibrations across the water. Forty-five minutes. That's all you need to do.</p>
+  </header>
+
+  <!-- STEP 1: SESSION PICKER -->
+  <section class="card" id="step-sessions">
+    <h2>Choose your evening</h2>
+    <p class="lede">Every Thursday at 6:00pm on Boardwalk Beach. Six floating beds per session.</p>
+    <div class="session-list" id="sessionList">
+      <div class="loading-row">Checking availability…</div>
+    </div>
+  </section>
+
+  <!-- STEP 2: FORM -->
+  <section class="card hidden" id="step-form">
+    <h2 id="formHeading">Reserve your spot</h2>
+    <p class="spaces-remaining" id="spacesRemaining"></p>
+
+    <div class="description">
+      Floating beds, waist-deep warm water, sunset overhead. Maria places sound bowls around you while you drift. <em>Forty-five minutes of slow.</em> Wear swimwear or anything light.
+    </div>
+
+    <div class="waiver">
+      <strong>Waiver</strong><br><br>
+      I understand that the Floating Ocean Sound Bath is a wellness activity facilitated by an independent instructor and involves floating on the ocean surface using a floating bed in waist-deep water at sunset. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health, am comfortable in open water, and have no medical conditions — including heart conditions, respiratory conditions or pregnancy — that may be affected by this activity. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.
+    </div>
+
+    <label class="waiver-box">
+      <input type="checkbox" id="waiverCheckbox" />
+      <label for="waiverCheckbox">I have read and understood the above and agree to participate on these terms.</label>
+    </label>
+
+    <div class="field">
+      <label for="guestName">Your name</label>
+      <input type="text" id="guestName" autocomplete="name" placeholder="Full name" />
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="roomNumber">Room number</label>
+        <input type="text" id="roomNumber" autocomplete="off" placeholder="214" />
+      </div>
+      <div class="field">
+        <label for="partySize">How many people</label>
+        <select id="partySize">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="contactMethod">Reach me on</label>
+        <select id="contactMethod">
+          <option>WhatsApp</option>
+          <option>SMS</option>
+          <option>In-app chat</option>
+          <option>Email</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="contactDetail">Number / email</label>
+        <input type="text" id="contactDetail" placeholder="+1 234 567 8910" />
+      </div>
+    </div>
+    <p class="help">We'll send a gentle reminder the morning of and a quick note after — through Duve, your way.</p>
+
+    <div id="errorBox" class="error-msg hidden"></div>
+
+    <button class="btn btn-primary" id="reserveBtn" disabled>Reserve my spot</button>
+
+    <p class="footer-note">
+      <span class="italic">Plans change — we know.</span> Cancellations are easy: reply to your reminder or stop by the front desk.
+    </p>
+  </section>
+
+  <!-- STEP 2b: FULL — WAITLIST PROMPT -->
+  <section class="card hidden" id="step-full">
+    <div class="state">
+      <div class="state-icon">🌊</div>
+      <h2>This session is <span class="italic">fully booked</span></h2>
+      <p>Join the waitlist and we'll reach out the moment a spot opens up.</p>
+    </div>
+    <div class="full-banner" id="fullBanner"></div>
+
+    <div class="field">
+      <label for="wlName">Your name</label>
+      <input type="text" id="wlName" autocomplete="name" placeholder="Full name" />
+    </div>
+    <div class="field-row">
+      <div class="field"><label for="wlRoom">Room</label><input type="text" id="wlRoom" placeholder="214" /></div>
+      <div class="field">
+        <label for="wlParty">How many</label>
+        <select id="wlParty"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="wlContactMethod">Reach me on</label>
+        <select id="wlContactMethod">
+          <option>WhatsApp</option><option>SMS</option><option>In-app chat</option><option>Email</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="wlContact">Number / email</label>
+        <input type="text" id="wlContact" placeholder="+1 234 567 8910" />
+      </div>
+    </div>
+
+    <div id="wlErrorBox" class="error-msg hidden"></div>
+
+    <button class="btn btn-primary" id="waitlistBtn">Join the waitlist</button>
+    <button class="btn btn-secondary" id="backBtn" style="margin-top:10px;">Pick a different evening</button>
+  </section>
+
+  <!-- STEP 3: CONFIRMED -->
+  <section class="card hidden" id="step-confirmed">
+    <div class="state">
+      <div class="state-icon">🌴</div>
+      <h2>You're <span class="italic">all set</span></h2>
+      <p id="confirmText"></p>
+      <div class="state-meta" id="confirmMeta"></div>
+      <p style="margin-top:6px;">We can't wait to see you there.</p>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:24px;max-width:260px;margin-left:auto;margin-right:auto;">Book another evening</button>
+    </div>
+  </section>
+
+  <!-- STEP 3b: WAITLISTED -->
+  <section class="card hidden" id="step-waitlisted">
+    <div class="state">
+      <div class="state-icon">📝</div>
+      <h2>You're <span class="italic">on the list</span></h2>
+      <p id="waitlistedText"></p>
+      <p style="margin-top:14px;">If a spot opens, we'll reach out right away — you'll have two hours to confirm before it moves to the next guest.</p>
+      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:24px;max-width:260px;margin-left:auto;margin-right:auto;">Done</button>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    Boardwalk Boutique Hotel Aruba <span class="italic">· Slow Summer 2026</span><br>
+    Need help? Stop by the front desk or message us through the app.
+  </p>
+</div>
+
+<script>
+/* =========================================================================
+   CONFIG — endpoints baked in; Vercel serves both the HTML and the API
+   ========================================================================= */
+const ACTIVITY     = "Floating Ocean Sound Bath";
+const SESSION_TIME = "6:00 PM";
+const AVAIL_URL    = "/api/availability?activity=" + encodeURIComponent(ACTIVITY);
+const BOOK_URL     = "/api/book";
+
+/* =========================================================================
+   STATE
+   ========================================================================= */
+let selectedSession = null;
+let sessions = []; // [{ iso, dateObj, confirmed, spacesLeft, capacity }]
+
+/* =========================================================================
+   HELPERS
+   ========================================================================= */
+function pad(n){ return n < 10 ? '0' + n : '' + n; }
+function isoDate(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+function prettyDate(d){
+  return d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+}
+function showError(box, msg){
+  box.textContent = msg;
+  box.classList.remove('hidden');
+}
+function clearError(box){ box.classList.add('hidden'); }
+
+/* =========================================================================
+   LOAD SESSIONS
+   ========================================================================= */
+async function loadSessions(){
+  const list = document.getElementById('sessionList');
+  try {
+    const res = await fetch(AVAIL_URL);
+    if (!res.ok) throw new Error('availability fetch failed');
+    const data = await res.json();
+    const today = isoDate(new Date());
+    sessions = Object.entries(data.sessions || {})
+      .filter(([iso]) => iso >= today)
+      .sort()
+      .map(([iso, info]) => ({ iso, dateObj: new Date(iso + 'T18:00:00'), ...info }));
+    renderSessions();
+  } catch (e) {
+    list.innerHTML = '<div class="loading-row" style="color:var(--danger)">We can\'t load sessions right now. Please refresh or visit the front desk.</div>';
+  }
+}
+
+function renderSessions(){
+  const list = document.getElementById('sessionList');
+  if (sessions.length === 0) {
+    list.innerHTML = '<div class="loading-row">No more sessions this summer — see you next year 🌴</div>';
+    return;
+  }
+  list.innerHTML = sessions.map(s => {
+    const left = s.spacesLeft;
+    const isFull = left <= 0;
+    let pill;
+    if (isFull) pill = '<span class="s-status pill-full">Fully booked</span>';
+    else if (left <= 2) pill = '<span class="s-status pill-low">' + left + ' left</span>';
+    else pill = '<span class="s-status pill-open">' + left + ' spaces</span>';
+    return `
+      <div class="session" data-iso="${s.iso}">
+        <div>
+          <div class="s-date">${prettyDate(s.dateObj)}</div>
+          <div class="s-meta">${SESSION_TIME} · Boardwalk Beach</div>
+        </div>
+        ${pill}
+      </div>
+    `;
+  }).join('');
+  list.querySelectorAll('.session').forEach(el => {
+    el.addEventListener('click', () => selectSession(el.dataset.iso, el));
+  });
+}
+
+function selectSession(iso, el){
+  document.querySelectorAll('.session').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSession = iso;
+  const s = sessions.find(x => x.iso === iso);
+  if (!s) return;
+
+  document.getElementById('formHeading').textContent = 'Reserve · ' + prettyDate(s.dateObj);
+
+  if (s.spacesLeft <= 0) {
+    document.getElementById('step-form').classList.add('hidden');
+    document.getElementById('step-full').classList.remove('hidden');
+    document.getElementById('fullBanner').textContent =
+      prettyDate(s.dateObj) + ' · ' + SESSION_TIME + ' — all six beds reserved';
+    setTimeout(()=>document.getElementById('step-full').scrollIntoView({behavior:'smooth',block:'start'}), 80);
+  } else {
+    document.getElementById('step-full').classList.add('hidden');
+    document.getElementById('step-form').classList.remove('hidden');
+    const sr = document.getElementById('spacesRemaining');
+    sr.innerHTML = '<strong>' + s.spacesLeft + '</strong> of ' + s.capacity + ' floating beds remaining';
+
+    // Trim party size dropdown to what fits
+    const sel = document.getElementById('partySize');
+    Array.from(sel.options).forEach(o => { o.disabled = parseInt(o.value, 10) > s.spacesLeft; });
+    if (parseInt(sel.value, 10) > s.spacesLeft) sel.value = '1';
+
+    setTimeout(()=>document.getElementById('step-form').scrollIntoView({behavior:'smooth',block:'start'}), 80);
+  }
+}
+
+/* =========================================================================
+   WAIVER GATE
+   ========================================================================= */
+function checkReserveEnabled(){
+  const waiver  = document.getElementById('waiverCheckbox').checked;
+  const name    = document.getElementById('guestName').value.trim();
+  const room    = document.getElementById('roomNumber').value.trim();
+  const contact = document.getElementById('contactDetail').value.trim();
+  document.getElementById('reserveBtn').disabled = !(waiver && name && room && contact);
+}
+['waiverCheckbox','guestName','roomNumber','contactDetail'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', checkReserveEnabled);
+  el.addEventListener('change', checkReserveEnabled);
+});
+
+/* =========================================================================
+   SUBMIT BOOKING
+   ========================================================================= */
+async function postBooking(payload){
+  const res = await fetch(BOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json().catch(()=>({}));
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || 'Booking failed');
+  }
+  return data;
+}
+
+document.getElementById('reserveBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('reserveBtn');
+  const errBox = document.getElementById('errorBox');
+  clearError(errBox);
+  btn.disabled = true;
+  btn.textContent = 'Reserving…';
+
+  const payload = {
+    activity:        ACTIVITY,
+    sessionDate:     selectedSession,
+    guestName:       document.getElementById('guestName').value.trim(),
+    roomNumber:      document.getElementById('roomNumber').value.trim(),
+    partySize:       parseInt(document.getElementById('partySize').value, 10),
+    contactMethod:   document.getElementById('contactMethod').value,
+    contactDetail:   document.getElementById('contactDetail').value.trim(),
+    waiverConfirmed: true
+  };
+
+  try {
+    const result = await postBooking(payload);
+    const d = new Date(selectedSession + 'T18:00:00');
+    if (result.status === 'Waitlisted') {
+      // Server downgraded to waitlist (race condition or capacity drift)
+      document.getElementById('waitlistedText').innerHTML =
+        'Position <strong>' + result.waitlistPosition + '</strong> for ' + prettyDate(d) + '.';
+      document.getElementById('step-sessions').classList.add('hidden');
+      document.getElementById('step-form').classList.add('hidden');
+      document.getElementById('step-waitlisted').classList.remove('hidden');
+    } else {
+      document.getElementById('confirmText').innerHTML =
+        "Your spot is reserved for the <strong>" + ACTIVITY + "</strong>.";
+      document.getElementById('confirmMeta').innerHTML =
+        "<strong>" + prettyDate(d) + "</strong><br>" + SESSION_TIME + " · Boardwalk Beach";
+      document.getElementById('step-sessions').classList.add('hidden');
+      document.getElementById('step-form').classList.add('hidden');
+      document.getElementById('step-confirmed').classList.remove('hidden');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    showError(errBox, e.message || "Something went wrong — please try again or visit the front desk.");
+    btn.disabled = false;
+    btn.textContent = 'Reserve my spot';
+  }
+});
+
+/* =========================================================================
+   WAITLIST SUBMIT
+   ========================================================================= */
+document.getElementById('waitlistBtn').addEventListener('click', async () => {
+  const btn    = document.getElementById('waitlistBtn');
+  const errBox = document.getElementById('wlErrorBox');
+  clearError(errBox);
+
+  const name    = document.getElementById('wlName').value.trim();
+  const room    = document.getElementById('wlRoom').value.trim();
+  const party   = parseInt(document.getElementById('wlParty').value, 10);
+  const cm      = document.getElementById('wlContactMethod').value;
+  const contact = document.getElementById('wlContact').value.trim();
+  if (!name || !room || !contact) {
+    showError(errBox, "Please fill in name, room, and how to reach you.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Joining…';
+
+  // The server enforces capacity — sending the booking endpoint with a clearly-full session
+  // will route to waitlist automatically.
+  const payload = {
+    activity:        ACTIVITY,
+    sessionDate:     selectedSession,
+    guestName:       name,
+    roomNumber:      room,
+    partySize:       party,
+    contactMethod:   cm,
+    contactDetail:   contact,
+    waiverConfirmed: true
+  };
+
+  try {
+    const result = await postBooking(payload);
+    const d = new Date(selectedSession + 'T18:00:00');
+    document.getElementById('waitlistedText').innerHTML =
+      "Position <strong>" + (result.waitlistPosition || '—') + "</strong> for " + prettyDate(d) + ".";
+    document.getElementById('step-sessions').classList.add('hidden');
+    document.getElementById('step-full').classList.add('hidden');
+    document.getElementById('step-waitlisted').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    showError(errBox, e.message || "Something went wrong — please try again.");
+    btn.disabled = false;
+    btn.textContent = 'Join the waitlist';
+  }
+});
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  document.getElementById('step-full').classList.add('hidden');
+  document.getElementById('step-sessions').scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+/* =========================================================================
+   INIT
+   ========================================================================= */
+loadSessions();
+</script>
+</body>
+</html>
