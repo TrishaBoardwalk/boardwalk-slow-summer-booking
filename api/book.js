@@ -1,10 +1,14 @@
 // api/book.js
 // POST /api/book
-// Body: { activity, sessionDate, guestName, roomNumber, partySize, contactMethod, contactDetail, waiverConfirmed }
+// Body: { activity, sessionDate, guestName, roomNumber, partySize, contactMethod, waiverConfirmed }
 //
 // Validates the request, recomputes availability server-side (never trust the client),
 // and writes either a Confirmed booking or a Waitlisted entry to Notion.
-// Returns { ok: true, status: "Confirmed" | "Waitlisted", waitlistPosition? }.
+// Returns { ok: true, status: "Confirmed" | "Waitlisted", waitlistPosition?, bookingPageId }.
+//
+// Note: contactDetail (phone/email) is no longer collected on the guest page —
+// the team looks the guest up by room number in Duve. Field still accepted for
+// front-desk dashboard bookings if passed.
 
 import { ACTIVITIES, queryBookingsBySession, createBookingPage, getSessionsFor } from "../lib/notion.js";
 
@@ -44,6 +48,7 @@ export default async function handler(req, res) {
   const size = parseInt(partySize, 10);
   if (!Number.isFinite(size) || size < 1 || size > ACTIVITIES[activity].capacity) return bad(res, "Party size out of range");
   if (waiverConfirmed !== true) return bad(res, "Waiver must be accepted");
+  // contactDetail is optional on guest bookings now — Duve resolves room → contact.
   if (contactDetail && contactDetail.length > 200) return bad(res, "Contact detail too long");
 
   const cfg = ACTIVITIES[activity];
