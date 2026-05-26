@@ -29,6 +29,11 @@
   h1{font-family:'Noto Serif Display',Georgia,serif;font-weight:400;font-size:36px;line-height:1.1;margin:0 0 12px;color:var(--sand)}
   h1 .italic{font-family:'Playfair Display',Georgia,serif;font-style:italic;color:var(--seafoam)}
   .intro{font-size:15px;color:rgba(242,235,226,.88);margin:0;max-width:480px}
+  .schedule{margin:16px 0 0;font-size:11.5px;color:var(--seafoam);letter-spacing:.16em;text-transform:uppercase;font-weight:400}
+  .lang-toggle{position:absolute;top:14px;right:14px;z-index:2;display:flex;gap:2px;background:rgba(0,0,0,.18);border-radius:999px;padding:3px}
+  .lang-toggle button{border:none;background:transparent;color:rgba(242,235,226,.78);font-family:inherit;font-size:10.5px;font-weight:500;letter-spacing:.14em;padding:6px 11px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
+  .lang-toggle button.active{background:var(--sand);color:var(--teal)}
+  .lang-toggle button:hover:not(.active){color:var(--sand)}
   .card{background:var(--paper);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow);margin-top:18px}
   .card h2{font-family:'Noto Serif Display',Georgia,serif;font-weight:400;font-size:24px;margin:0 0 14px;color:var(--teal)}
   .lede{font-size:14px;color:var(--ink-soft);margin:-6px 0 16px}
@@ -98,49 +103,51 @@
 <div class="wrap">
 
   <header class="hero">
-    <p class="eyebrow">Slow Summer · Boardwalk Aruba</p>
-    <h1>Hammock<br/><span class="italic">Cocooning</span></h1>
-    <p class="intro">Cocoon in a soft anti-gravity hammock beneath the stars while gentle movement, guided breath, and meditation help your body soften and your mind unwind.</p>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-lang="en" class="active">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+    <p class="eyebrow" data-i18n="eyebrow">Slow Summer · Boardwalk Aruba</p>
+    <h1><span data-i18n="title1">Hammock</span><br/><span class="italic" data-i18n="title2">Cocooning</span></h1>
+    <p class="intro" data-i18n="intro">Cocoon in a soft anti-gravity hammock beneath the stars while gentle movement, guided breath, and meditation help your body soften and your mind unwind.</p>
+    <p class="schedule" data-i18n="schedule">Sundays · 7:00 – 8:00 pm · Boardwalk Garden</p>
   </header>
 
   <section class="card" id="step-sessions">
-    <h2>Choose your evening</h2>
+    <h2 data-i18n="chooseEvening">Choose your evening</h2>
     <div class="cal-nav" id="calNav" style="display:none;">
       <button class="cal-nav-btn" id="calPrev" aria-label="Previous month">‹</button>
       <div class="cal-nav-label" id="calNavLabel"></div>
       <button class="cal-nav-btn" id="calNext" aria-label="Next month">›</button>
     </div>
-    <div id="calendarContainer"><div class="loading-row">Checking availability…</div></div>
+    <div id="calendarContainer"><div class="loading-row" data-i18n="loading">Checking availability…</div></div>
     <div class="cal-legend" id="calLegend" style="display:none;">
-      <span><span class="dot ok"></span>Open</span>
-      <span><span class="dot low"></span>Filling up</span>
-      <span><span class="dot full"></span>Waitlist only</span>
+      <span><span class="dot ok"></span><span data-i18n="legendOpen">Open</span></span>
+      <span><span class="dot low"></span><span data-i18n="legendLow">Filling up</span></span>
+      <span><span class="dot full"></span><span data-i18n="legendFull">Waitlist only</span></span>
     </div>
   </section>
 
   <section class="card hidden" id="step-form">
-    <h2 id="formHeading">Reserve your spot</h2>
+    <h2 id="formHeading" data-i18n="reserveYourSpot">Reserve your spot</h2>
     <p class="spaces-remaining" id="spacesRemaining"></p>
 
-    <div class="waiver">
-      <strong>Waiver</strong><br><br>
-      I understand that the Hammock Cocooning session is a wellness activity facilitated by an independent instructor and involves being suspended in an aerial hammock structure in an outdoor garden setting, combined with guided breathwork and sound bowl meditation. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health and have no medical conditions — including back or neck injuries, vertigo, respiratory conditions or pregnancy — that may be affected by suspension, breathwork or sound bowl vibrations. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.
-    </div>
+    <div class="waiver" data-i18n-html="waiver"><strong data-i18n="waiverLabel">Waiver</strong><br><br>I understand that the Hammock Cocooning session is a wellness activity facilitated by an independent instructor and involves being suspended in an aerial hammock structure in an outdoor garden setting, combined with guided breathwork and sound bowl meditation. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health and have no medical conditions — including back or neck injuries, vertigo, respiratory conditions or pregnancy — that may be affected by suspension, breathwork or sound bowl vibrations. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.</div>
 
     <label class="waiver-box">
       <input type="checkbox" id="waiverCheckbox" />
-      <label for="waiverCheckbox">I have read and understood the above and agree to participate on these terms.</label>
+      <label for="waiverCheckbox" data-i18n="waiverAgree">I have read and understood the above and agree to participate on these terms.</label>
     </label>
 
     <div class="field">
-      <label for="guestName">Your name</label>
-      <input type="text" id="guestName" autocomplete="name" placeholder="Full name" />
+      <label for="guestName" data-i18n="yourName">Your name</label>
+      <input type="text" id="guestName" autocomplete="name" placeholder="Full name" data-i18n-ph="fullName" />
     </div>
 
     <div class="field-row">
-      <div class="field"><label for="roomNumber">Room number</label><input type="text" id="roomNumber" autocomplete="off" placeholder="214" /></div>
+      <div class="field"><label for="roomNumber" data-i18n-html="roomNumberLabel">Room number <span style="color:var(--ink-faint);font-weight:300;">(optional)</span></label><input type="text" id="roomNumber" autocomplete="off" placeholder="214" /></div>
       <div class="field">
-        <label for="partySize">How many people</label>
+        <label for="partySize" data-i18n="howManyPeople">How many people</label>
         <select id="partySize">
           <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
         </select>
@@ -148,78 +155,74 @@
     </div>
 
     <div class="field">
-      <label for="contactMethod">Best way to reach you</label>
+      <label for="contactMethod" data-i18n="bestWay">Best way to reach you</label>
       <select id="contactMethod">
-        <option value="WhatsApp">WhatsApp</option><option value="SMS">SMS</option><option value="In-app chat">In-app chat</option><option value="Email">Email</option><option value="Front desk">Front desk</option>
+        <option value="WhatsApp">WhatsApp</option><option value="SMS">SMS</option><option value="In-app chat" data-i18n-opt="inAppChat">In-app chat</option><option value="Email" data-i18n-opt="email">Email</option>
       </select>
-      <p class="help">We'll use the contact details on file from your reservation.</p>
+      <p class="help" data-i18n="contactHelp">We'll use the contact details on file from your reservation.</p>
     </div>
 
     <div id="errorBox" class="error-msg hidden"></div>
 
-    <button class="btn btn-primary" id="reserveBtn" disabled>Reserve my spot</button>
-    <p class="footer-note"><span class="italic">Plans change — we know.</span> You can cancel any time from your confirmation page.</p>
+    <button class="btn btn-primary" id="reserveBtn" data-i18n="reserveBtn" disabled>Reserve my spot</button>
   </section>
 
   <section class="card hidden" id="step-full">
     <div class="state">
       <div class="state-icon">🌴</div>
-      <h2>This session is <span class="italic">fully booked</span></h2>
-      <p>Join the waitlist and we'll reach out the moment a spot opens up.</p>
+      <h2><span data-i18n="fullPre">This session is </span><span class="italic" data-i18n="fullBooked">fully booked</span></h2>
+      <p data-i18n="joinWaitlistBlurb">Join the waitlist and we'll reach out the moment a spot opens up.</p>
     </div>
 
-    <div class="waiver">
-      <strong>Waiver</strong><br><br>
-      I understand that the Hammock Cocooning session is a wellness activity facilitated by an independent instructor and involves being suspended in an aerial hammock structure in an outdoor garden setting, combined with guided breathwork and sound bowl meditation. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health and have no medical conditions — including back or neck injuries, vertigo, respiratory conditions or pregnancy — that may be affected by suspension, breathwork or sound bowl vibrations. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.
-    </div>
+    <div class="waiver" data-i18n-html="waiver"><strong data-i18n="waiverLabel">Waiver</strong><br><br>I understand that the Hammock Cocooning session is a wellness activity facilitated by an independent instructor and involves being suspended in an aerial hammock structure in an outdoor garden setting, combined with guided breathwork and sound bowl meditation. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health and have no medical conditions — including back or neck injuries, vertigo, respiratory conditions or pregnancy — that may be affected by suspension, breathwork or sound bowl vibrations. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.</div>
 
     <label class="waiver-box">
       <input type="checkbox" id="wlWaiverCheckbox" />
-      <label for="wlWaiverCheckbox">I have read and understood the above and agree to participate on these terms.</label>
+      <label for="wlWaiverCheckbox" data-i18n="waiverAgree">I have read and understood the above and agree to participate on these terms.</label>
     </label>
 
-    <div class="field"><label for="wlName">Your name</label><input type="text" id="wlName" autocomplete="name" placeholder="Full name" /></div>
+    <div class="field"><label for="wlName" data-i18n="yourName">Your name</label><input type="text" id="wlName" autocomplete="name" placeholder="Full name" data-i18n-ph="fullName" /></div>
     <div class="field-row">
-      <div class="field"><label for="wlRoom">Room</label><input type="text" id="wlRoom" placeholder="214" /></div>
-      <div class="field"><label for="wlParty">How many</label><select id="wlParty"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+      <div class="field"><label for="wlRoom" data-i18n-html="roomShortLabel">Room <span style="color:var(--ink-faint);font-weight:300;">(optional)</span></label><input type="text" id="wlRoom" placeholder="214" /></div>
+      <div class="field"><label for="wlParty" data-i18n="howMany">How many</label><select id="wlParty"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
     </div>
     <div class="field">
-      <label for="wlContactMethod">Best way to reach you</label>
+      <label for="wlContactMethod" data-i18n="bestWay">Best way to reach you</label>
       <select id="wlContactMethod">
-        <option value="WhatsApp">WhatsApp</option><option value="SMS">SMS</option><option value="In-app chat">In-app chat</option><option value="Email">Email</option><option value="Front desk">Front desk</option>
+        <option value="WhatsApp">WhatsApp</option><option value="SMS">SMS</option><option value="In-app chat" data-i18n-opt="inAppChat">In-app chat</option><option value="Email" data-i18n-opt="email">Email</option>
       </select>
     </div>
 
     <div id="wlErrorBox" class="error-msg hidden"></div>
 
-    <button class="btn btn-primary" id="waitlistBtn" disabled>Join the waitlist</button>
-    <button class="btn btn-secondary" id="backBtn" style="margin-top:10px;">Pick a different evening</button>
+    <button class="btn btn-primary" id="waitlistBtn" data-i18n="joinWaitlist" disabled>Join the waitlist</button>
+    <button class="btn btn-secondary" id="backBtn" data-i18n="pickDifferent" style="margin-top:10px;">Pick a different evening</button>
   </section>
 
   <section class="card hidden" id="step-confirmed">
     <div class="state">
       <div class="state-icon">🌴</div>
-      <h2>You're <span class="italic">all set</span></h2>
+      <h2><span data-i18n="youAre">You're </span><span class="italic" data-i18n="allSet">all set</span></h2>
       <p id="confirmText"></p>
       <div class="state-meta" id="confirmMeta"></div>
-      <p style="margin-top:6px;">We can't wait to see you there.</p>
+      <p style="margin-top:6px;" data-i18n="cantWait">We can't wait to see you there.</p>
       <p class="cancel-link-row" id="cancelLinkRow"></p>
-      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Book another evening</button>
+      <button class="btn btn-secondary" data-i18n="bookAnother" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Book another evening</button>
     </div>
   </section>
 
   <section class="card hidden" id="step-waitlisted">
     <div class="state">
       <div class="state-icon">📝</div>
-      <h2>You're <span class="italic">on the list</span></h2>
+      <h2><span data-i18n="youAre">You're </span><span class="italic" data-i18n="onTheList">on the list</span></h2>
       <p id="waitlistedText"></p>
-      <p style="margin-top:14px;">If a spot opens, we'll reach out right away — you'll have two hours to confirm before it moves to the next guest.</p>
+      <p style="margin-top:14px;" data-i18n="spotOpens">If a spot opens, we'll reach out right away — you'll have two hours to confirm before it moves to the next guest.</p>
       <p class="cancel-link-row" id="waitlistCancelRow"></p>
-      <button class="btn btn-secondary" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Done</button>
+      <button class="btn btn-secondary" data-i18n="done" onclick="location.reload()" style="margin-top:14px;max-width:260px;margin-left:auto;margin-right:auto;">Done</button>
     </div>
   </section>
 
-  <p class="footer-note">
+  <p class="footer-note" data-i18n-html="footer">
     Boardwalk Boutique Hotel Aruba <span class="italic">· Slow Summer 2026</span><br>
     Need help? Stop by the front desk or message us through the app.
   </p>
@@ -227,49 +230,174 @@
 
 <script>
 const ACTIVITY     = "Hammock Cocooning";
-const SESSION_TIME = "7:00 PM";
-const LOCATION     = "Boardwalk Garden";
 const AVAIL_URL    = "/api/availability?activity=" + encodeURIComponent(ACTIVITY);
 const BOOK_URL     = "/api/book";
 const CANCEL_BASE  = "/api/cancel?id=";
 
-const MONTHS = [
+const MONTHS_EN = [
   { idx: 6, label: "July",   year: 2026 },
   { idx: 7, label: "August", year: 2026 }
 ];
+const MONTHS_ES = [
+  { idx: 6, label: "Julio",  year: 2026 },
+  { idx: 7, label: "Agosto", year: 2026 }
+];
 
-let selectedSession = null;
-let sessionsByIso = {};
-let currentMonthIdx = 0;
+const I18N = {
+  en: {
+    eyebrow: "Slow Summer · Boardwalk Aruba",
+    title1: "Hammock",
+    title2: "Cocooning",
+    intro: "Cocoon in a soft anti-gravity hammock beneath the stars while gentle movement, guided breath, and meditation help your body soften and your mind unwind.",
+    schedule: "Sundays · 7:00 – 8:00 pm · Boardwalk Garden",
+    chooseEvening: "Choose your evening",
+    loading: "Checking availability…",
+    legendOpen: "Open", legendLow: "Filling up", legendFull: "Waitlist only",
+    reserveYourSpot: "Reserve your spot",
+    reservePrefix: "Reserve · ",
+    waiverLabel: "Waiver",
+    waiver: "<strong>Waiver</strong><br><br>I understand that the Hammock Cocooning session is a wellness activity facilitated by an independent instructor and involves being suspended in an aerial hammock structure in an outdoor garden setting, combined with guided breathwork and sound bowl meditation. I acknowledge that participation is entirely voluntary and at my own risk. I confirm I am in good physical health and have no medical conditions — including back or neck injuries, vertigo, respiratory conditions or pregnancy — that may be affected by suspension, breathwork or sound bowl vibrations. I release Boardwalk Boutique Hotel Aruba, its owners, staff, and affiliates from any liability for injury, loss, or damages that may occur during or as a result of my participation, except in cases of gross negligence. I understand that Boardwalk is not responsible for the actions or omissions of the independent instructor.",
+    waiverAgree: "I have read and understood the above and agree to participate on these terms.",
+    yourName: "Your name", fullName: "Full name",
+    roomNumberLabel: "Room number <span style=\"color:var(--ink-faint);font-weight:300;\">(optional)</span>",
+    roomShortLabel: "Room <span style=\"color:var(--ink-faint);font-weight:300;\">(optional)</span>",
+    howManyPeople: "How many people", howMany: "How many",
+    bestWay: "Best way to reach you", inAppChat: "In-app chat", email: "Email",
+    contactHelp: "We'll use the contact details on file from your reservation.",
+    reserveBtn: "Reserve my spot", reserving: "Reserving…",
+    spotLeft: "spot left", spotsLeft: "spots left",
+    pillOpen: "open", pillLeft: "left", pillWaitlist: "Waitlist",
+    fullPre: "This session is ", fullBooked: "fully booked",
+    joinWaitlistBlurb: "Join the waitlist and we'll reach out the moment a spot opens up.",
+    joinWaitlist: "Join the waitlist", joining: "Joining…",
+    pickDifferent: "Pick a different evening",
+    youAre: "You're ", allSet: "all set", onTheList: "on the list",
+    cantWait: "We can't wait to see you there.",
+    spotOpens: "If a spot opens, we'll reach out right away — you'll have two hours to confirm before it moves to the next guest.",
+    bookAnother: "Book another evening", done: "Done",
+    yourSpotReserved: "Your spot is reserved for <strong>" + ACTIVITY + "</strong>.",
+    plansChange: "Plans change? ", cancelMySpot: "Cancel my spot",
+    leaveWaitlist: "Leave the waitlist",
+    positionPrefix: "Position ", positionSuffix: " for ",
+    errorGeneric: "Something went wrong — please try again or visit the front desk.",
+    errorAgain: "Something went wrong — please try again.",
+    errorNoAvail: "We can't load availability right now. Please refresh or visit the front desk.",
+    errorNoName: "Please add your name.",
+    footer: "Boardwalk Boutique Hotel Aruba <span class=\"italic\">· Slow Summer 2026</span><br>Need help? Stop by the front desk or message us through the app.",
+    sessionTimeLabel: "7:00 – 8:00 pm",
+    locationLabel: "Boardwalk Garden"
+  },
+  es: {
+    eyebrow: "Slow Summer · Boardwalk Aruba",
+    title1: "Cocoon en",
+    title2: "Hamaca",
+    intro: "Acurrúcate en una suave hamaca anti-gravedad bajo las estrellas mientras el movimiento suave, la respiración guiada y la meditación ayudan a tu cuerpo a relajarse y tu mente a descansar.",
+    schedule: "Domingos · 7:00 – 8:00 pm · Jardín de Boardwalk",
+    chooseEvening: "Elige tu noche",
+    loading: "Verificando disponibilidad…",
+    legendOpen: "Disponible", legendLow: "Casi lleno", legendFull: "Solo lista de espera",
+    reserveYourSpot: "Reserva tu lugar",
+    reservePrefix: "Reservar · ",
+    waiverLabel: "Exención de responsabilidad",
+    waiver: "<strong>Exención de responsabilidad</strong><br><br>Entiendo que la sesión de Hamaca Cocoon es una actividad de bienestar facilitada por un instructor independiente y consiste en estar suspendido/a en una estructura de hamaca aérea en un entorno de jardín al aire libre, combinado con respiración guiada y meditación con cuencos sonoros. Reconozco que la participación es completamente voluntaria y bajo mi propio riesgo. Confirmo que estoy en buen estado de salud y no tengo condiciones médicas — incluidas lesiones de espalda o cuello, vértigo, condiciones respiratorias o embarazo — que puedan verse afectadas por la suspensión, la respiración o las vibraciones de los cuencos sonoros. Libero a Boardwalk Boutique Hotel Aruba, sus propietarios, personal y afiliados de cualquier responsabilidad por lesiones, pérdidas o daños que puedan ocurrir durante o como resultado de mi participación, excepto en casos de negligencia grave. Entiendo que Boardwalk no es responsable de las acciones u omisiones del instructor independiente.",
+    waiverAgree: "He leído y entendido lo anterior y acepto participar bajo estos términos.",
+    yourName: "Tu nombre", fullName: "Nombre completo",
+    roomNumberLabel: "Número de habitación <span style=\"color:var(--ink-faint);font-weight:300;\">(opcional)</span>",
+    roomShortLabel: "Habitación <span style=\"color:var(--ink-faint);font-weight:300;\">(opcional)</span>",
+    howManyPeople: "Cuántas personas", howMany: "Cuántas",
+    bestWay: "Mejor forma de contactarte", inAppChat: "Chat de la app", email: "Correo",
+    contactHelp: "Usaremos los datos de contacto que dejaste en tu reserva.",
+    reserveBtn: "Reservar mi lugar", reserving: "Reservando…",
+    spotLeft: "lugar disponible", spotsLeft: "lugares disponibles",
+    pillOpen: "libres", pillLeft: "quedan", pillWaitlist: "Espera",
+    fullPre: "Esta sesión está ", fullBooked: "completa",
+    joinWaitlistBlurb: "Únete a la lista de espera y te avisamos en cuanto se libere un lugar.",
+    joinWaitlist: "Unirme a la lista de espera", joining: "Uniéndote…",
+    pickDifferent: "Elegir otra noche",
+    youAre: "Ya está ", allSet: "todo listo", onTheList: "en la lista",
+    cantWait: "No podemos esperar a verte allí.",
+    spotOpens: "Si se libera un lugar, te escribimos enseguida — tendrás dos horas para confirmar antes de que pase al siguiente huésped.",
+    bookAnother: "Reservar otra noche", done: "Listo",
+    yourSpotReserved: "Tu lugar está reservado para <strong>Hamaca Cocoon</strong>.",
+    plansChange: "¿Cambio de planes? ", cancelMySpot: "Cancelar mi lugar",
+    leaveWaitlist: "Salir de la lista de espera",
+    positionPrefix: "Posición ", positionSuffix: " para el ",
+    errorGeneric: "Algo salió mal — intenta de nuevo o pasa por recepción.",
+    errorAgain: "Algo salió mal — intenta de nuevo.",
+    errorNoAvail: "No podemos cargar la disponibilidad en este momento. Refresca la página o pasa por recepción.",
+    errorNoName: "Por favor escribe tu nombre.",
+    footer: "Boardwalk Boutique Hotel Aruba <span class=\"italic\">· Slow Summer 2026</span><br>¿Necesitas ayuda? Pasa por recepción o escríbenos por la app.",
+    sessionTimeLabel: "7:00 – 8:00 pm",
+    locationLabel: "Jardín de Boardwalk"
+  }
+};
+
+let lang = localStorage.getItem('bwLang') || 'en';
+function t(k){return (I18N[lang] && I18N[lang][k]) || I18N.en[k] || k}
+function months(){return lang === 'es' ? MONTHS_ES : MONTHS_EN}
+
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>el.innerHTML=t(el.dataset.i18nHtml));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+  document.querySelectorAll('[data-i18n-opt]').forEach(el=>el.textContent=t(el.dataset.i18nOpt));
+  document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  if (Object.keys(sessionsByIso).length) renderCalendar();
+  if (selectedSession) refreshFormHeading();
+}
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.lang-toggle button');
+  if (!btn) return;
+  lang = btn.dataset.lang;
+  localStorage.setItem('bwLang', lang);
+  applyLang();
+});
+
+let selectedSession = null, sessionsByIso = {}, currentMonthIdx = 0;
 
 function pad(n){return n<10?'0'+n:''+n}
 function isoDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function todayIso(){return isoDate(new Date())}
-function prettyDate(d){return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}
+function prettyDate(d){return d.toLocaleDateString(lang==='es'?'es-419':'en-US',{weekday:'long',month:'long',day:'numeric'})}
 function showError(b,m){b.textContent=m;b.classList.remove('hidden')}
 function clearError(b){b.classList.add('hidden')}
+
+function refreshFormHeading(){
+  if (!selectedSession) return;
+  const d = new Date(selectedSession+'T19:00:00');
+  const h = document.getElementById('formHeading');
+  if (h) h.textContent = t('reservePrefix') + prettyDate(d);
+  const sess = sessionsByIso[selectedSession];
+  if (sess) {
+    document.getElementById('spacesRemaining').innerHTML =
+      '<strong>'+sess.spacesLeft+'</strong> '+(sess.spacesLeft===1 ? t('spotLeft') : t('spotsLeft'));
+  }
+}
 
 async function loadSessions(){
   try{
     const res=await fetch(AVAIL_URL); if(!res.ok)throw new Error('fail');
     const data=await res.json(); sessionsByIso=data.sessions||{};
     const tm=new Date().getMonth(),ty=new Date().getFullYear();
-    const mi=MONTHS.findIndex(m=>m.idx===tm&&m.year===ty);
+    const mi=MONTHS_EN.findIndex(m=>m.idx===tm&&m.year===ty);
     currentMonthIdx=mi>=0?mi:0;
     renderCalendar();
     document.getElementById('calNav').style.display='flex';
     document.getElementById('calLegend').style.display='flex';
   }catch(e){
-    document.getElementById('calendarContainer').innerHTML='<div class="loading-row" style="color:var(--danger)">We can\'t load availability right now. Please refresh or visit the front desk.</div>';
+    document.getElementById('calendarContainer').innerHTML='<div class="loading-row" style="color:var(--danger)">'+t('errorNoAvail')+'</div>';
   }
 }
 
 function renderCalendar(){
   const wrap=document.getElementById('calendarContainer');
-  const today=todayIso(), m=MONTHS[currentMonthIdx];
+  const today=todayIso();
+  const ms = months();
+  const m=ms[currentMonthIdx];
   document.getElementById('calNavLabel').innerHTML=m.label+' <span class="italic">'+m.year+'</span>';
   document.getElementById('calPrev').disabled=currentMonthIdx<=0;
-  document.getElementById('calNext').disabled=currentMonthIdx>=MONTHS.length-1;
+  document.getElementById('calNext').disabled=currentMonthIdx>=ms.length-1;
   const fd=new Date(m.year,m.idx,1), ld=new Date(m.year,m.idx+1,0).getDate(), lead=fd.getDay();
   let cells='';
   for(let i=0;i<lead;i++)cells+='<div class="cal-day empty"></div>';
@@ -278,9 +406,9 @@ function renderCalendar(){
     if(!isSun||!s||past){cells+='<div class="cal-day regular"><span class="num">'+day+'</span></div>'}
     else{
       const left=s.spacesLeft; let cls='session ', pill;
-      if(left<=0){cls+='full';pill='<span class="pill">Waitlist</span>'}
-      else if(left<=2){cls+='low';pill='<span class="pill">'+left+' left</span>'}
-      else{cls+='open';pill='<span class="pill">'+left+' open</span>'}
+      if(left<=0){cls+='full';pill='<span class="pill">'+t('pillWaitlist')+'</span>'}
+      else if(left<=2){cls+='low';pill='<span class="pill">'+left+' '+t('pillLeft')+'</span>'}
+      else{cls+='open';pill='<span class="pill">'+left+' '+t('pillOpen')+'</span>'}
       if(iso===selectedSession)cls+=' selected';
       cells+='<div class="cal-day '+cls+'" data-iso="'+iso+'"><span class="num">'+day+'</span>'+pill+'</div>';
     }
@@ -290,7 +418,7 @@ function renderCalendar(){
 }
 
 document.getElementById('calPrev').addEventListener('click',()=>{if(currentMonthIdx>0){currentMonthIdx--;renderCalendar()}});
-document.getElementById('calNext').addEventListener('click',()=>{if(currentMonthIdx<MONTHS.length-1){currentMonthIdx++;renderCalendar()}});
+document.getElementById('calNext').addEventListener('click',()=>{if(currentMonthIdx<months().length-1){currentMonthIdx++;renderCalendar()}});
 
 function selectSession(iso,el){
   document.querySelectorAll('.cal-day.session').forEach(s=>s.classList.remove('selected'));
@@ -303,8 +431,7 @@ function selectSession(iso,el){
   }else{
     document.getElementById('step-full').classList.add('hidden');
     document.getElementById('step-form').classList.remove('hidden');
-    document.getElementById('formHeading').textContent='Reserve · '+prettyDate(d);
-    document.getElementById('spacesRemaining').innerHTML='<strong>'+s.spacesLeft+'</strong> '+(s.spacesLeft===1?'spot left':'spots left');
+    refreshFormHeading();
     const sel=document.getElementById('partySize');
     Array.from(sel.options).forEach(o=>{o.disabled=parseInt(o.value,10)>s.spacesLeft});
     if(parseInt(sel.value,10)>s.spacesLeft)sel.value='1';
@@ -315,16 +442,14 @@ function selectSession(iso,el){
 function checkReserveEnabled(){
   const w=document.getElementById('waiverCheckbox').checked;
   const n=document.getElementById('guestName').value.trim();
-  const r=document.getElementById('roomNumber').value.trim();
-  document.getElementById('reserveBtn').disabled=!(w&&n&&r&&selectedSession);
+  document.getElementById('reserveBtn').disabled=!(w&&n&&selectedSession);
 }
 ['waiverCheckbox','guestName','roomNumber'].forEach(id=>{const e=document.getElementById(id);e.addEventListener('input',checkReserveEnabled);e.addEventListener('change',checkReserveEnabled)});
 
 function checkWaitlistEnabled(){
   const w=document.getElementById('wlWaiverCheckbox').checked;
   const n=document.getElementById('wlName').value.trim();
-  const r=document.getElementById('wlRoom').value.trim();
-  document.getElementById('waitlistBtn').disabled=!(w&&n&&r&&selectedSession);
+  document.getElementById('waitlistBtn').disabled=!(w&&n&&selectedSession);
 }
 ['wlWaiverCheckbox','wlName','wlRoom'].forEach(id=>{const e=document.getElementById(id);e.addEventListener('input',checkWaitlistEnabled);e.addEventListener('change',checkWaitlistEnabled)});
 
@@ -335,36 +460,36 @@ async function postBooking(p){
 
 document.getElementById('reserveBtn').addEventListener('click',async()=>{
   const btn=document.getElementById('reserveBtn'), eb=document.getElementById('errorBox');
-  clearError(eb); btn.disabled=true; btn.textContent='Reserving…';
+  clearError(eb); btn.disabled=true; btn.textContent=t('reserving');
   const payload={activity:ACTIVITY,sessionDate:selectedSession,guestName:document.getElementById('guestName').value.trim(),roomNumber:document.getElementById('roomNumber').value.trim(),partySize:parseInt(document.getElementById('partySize').value,10),contactMethod:document.getElementById('contactMethod').value,waiverConfirmed:true};
   try{
     const r=await postBooking(payload); const d=new Date(selectedSession+'T19:00:00');
     if(r.status==='Waitlisted'){
-      document.getElementById('waitlistedText').innerHTML='Position <strong>'+r.waitlistPosition+'</strong> for '+prettyDate(d)+'.';
-      if(r.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(r.bookingPageId)+'">Leave the waitlist</a>';
+      document.getElementById('waitlistedText').innerHTML=t('positionPrefix')+'<strong>'+r.waitlistPosition+'</strong>'+t('positionSuffix')+prettyDate(d)+'.';
+      if(r.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(r.bookingPageId)+'">'+t('leaveWaitlist')+'</a>';
       showStep('step-waitlisted');
     }else{
-      document.getElementById('confirmText').innerHTML="Your spot is reserved for the <strong>"+ACTIVITY+"</strong>.";
-      document.getElementById('confirmMeta').innerHTML="<strong>"+prettyDate(d)+"</strong><br>"+SESSION_TIME+" · "+LOCATION;
-      if(r.bookingPageId)document.getElementById('cancelLinkRow').innerHTML='Plans change? <a href="'+CANCEL_BASE+encodeURIComponent(r.bookingPageId)+'">Cancel my spot</a>';
+      document.getElementById('confirmText').innerHTML=t('yourSpotReserved');
+      document.getElementById('confirmMeta').innerHTML="<strong>"+prettyDate(d)+"</strong><br>"+t('sessionTimeLabel')+" · "+t('locationLabel');
+      if(r.bookingPageId)document.getElementById('cancelLinkRow').innerHTML=t('plansChange')+'<a href="'+CANCEL_BASE+encodeURIComponent(r.bookingPageId)+'">'+t('cancelMySpot')+'</a>';
       showStep('step-confirmed');
     }
-  }catch(e){showError(eb,e.message||'Something went wrong — please try again or visit the front desk.');btn.disabled=false;btn.textContent='Reserve my spot'}
+  }catch(e){showError(eb,e.message||t('errorGeneric'));btn.disabled=false;btn.textContent=t('reserveBtn')}
 });
 
 document.getElementById('waitlistBtn').addEventListener('click',async()=>{
   const btn=document.getElementById('waitlistBtn'), eb=document.getElementById('wlErrorBox'); clearError(eb);
   const n=document.getElementById('wlName').value.trim(), r=document.getElementById('wlRoom').value.trim();
   const p=parseInt(document.getElementById('wlParty').value,10), cm=document.getElementById('wlContactMethod').value;
-  if(!n||!r){showError(eb,'Please fill in your name and room number.');return}
-  btn.disabled=true; btn.textContent='Joining…';
+  if(!n){showError(eb,t('errorNoName'));return}
+  btn.disabled=true; btn.textContent=t('joining');
   const payload={activity:ACTIVITY,sessionDate:selectedSession,guestName:n,roomNumber:r,partySize:p,contactMethod:cm,waiverConfirmed:true};
   try{
     const res=await postBooking(payload); const d=new Date(selectedSession+'T19:00:00');
-    document.getElementById('waitlistedText').innerHTML='Position <strong>'+(res.waitlistPosition||'—')+'</strong> for '+prettyDate(d)+'.';
-    if(res.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(res.bookingPageId)+'">Leave the waitlist</a>';
+    document.getElementById('waitlistedText').innerHTML=t('positionPrefix')+'<strong>'+(res.waitlistPosition||'—')+'</strong>'+t('positionSuffix')+prettyDate(d)+'.';
+    if(res.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(res.bookingPageId)+'">'+t('leaveWaitlist')+'</a>';
     showStep('step-waitlisted');
-  }catch(e){showError(eb,e.message||'Something went wrong — please try again.');btn.disabled=false;btn.textContent='Join the waitlist'}
+  }catch(e){showError(eb,e.message||t('errorAgain'));btn.disabled=false;btn.textContent=t('joinWaitlist')}
 });
 
 document.getElementById('backBtn').addEventListener('click',()=>{document.getElementById('step-full').classList.add('hidden');document.getElementById('step-sessions').scrollIntoView({behavior:'smooth',block:'start'})});
@@ -374,6 +499,7 @@ function showStep(stepId){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+applyLang();
 loadSessions();
 </script>
 </body>
