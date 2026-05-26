@@ -44,7 +44,9 @@ export default async function handler(req, res) {
   if (!ACTIVITIES[activity]) return bad(res, "Unknown activity");
   if (!getSessionsFor(activity).includes(sessionDate)) return bad(res, "Session date is not part of the published schedule");
   if (!guestName || guestName.length < 2 || guestName.length > 80) return bad(res, "Guest name required");
-  if (!roomNumber || roomNumber.length > 20) return bad(res, "Room number required");
+  // Room number is optional — guests in transit or no-room walk-ins may book without one.
+  // If provided, enforce length cap.
+  if (roomNumber && roomNumber.length > 20) return bad(res, "Room number too long");
   const size = parseInt(partySize, 10);
   if (!Number.isFinite(size) || size < 1 || size > ACTIVITIES[activity].capacity) return bad(res, "Party size out of range");
   if (waiverConfirmed !== true) return bad(res, "Waiver must be accepted");
@@ -66,11 +68,13 @@ export default async function handler(req, res) {
   const spacesLeft = cfg.capacity - confirmed;
 
   // Duplicate check: same guest + room + session already booked & active?
-  const dup = existing.find(b =>
+  // Only runs if a room number was provided — otherwise two no-room guests
+  // with similar names would be falsely flagged as duplicates.
+  const dup = roomNumber ? existing.find(b =>
     b.guestName?.toLowerCase() === guestName.toLowerCase() &&
     b.roomNumber === roomNumber &&
     ["Confirmed", "Waitlisted", "Offered"].includes(b.status)
-  );
+  ) : null;
   if (dup) {
     return res.status(409).json({
       ok: false,
@@ -93,7 +97,7 @@ export default async function handler(req, res) {
       sessionDate,
       sessionTime: cfg.time,
       guestName: guestName.trim(),
-      roomNumber: roomNumber.trim(),
+      roomNumber: (roomNumber || "").trim(),
       partySize: size,
       contactMethod: contactMethod || "Front desk",
       contactDetail: (contactDetail || "").trim(),
