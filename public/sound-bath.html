@@ -876,11 +876,12 @@ function renderCalendar(){
   for (let day = 1; day <= lastDate; day++) {
     const d = new Date(m.year, m.idx, day);
     const iso = isoDate(d);
-    const isThursday = d.getDay() === 4;
     const isPast = iso < today;
     const session = sessionsByIso[iso];
 
-    if (!isThursday || !session || isPast) {
+    // A day is a session day if the server returned availability for it —
+    // this naturally handles one-off date overrides (e.g. Thu -> Fri moves).
+    if (!session || isPast) {
       cells += '<div class="cal-day regular"><span class="num">' + day + '</span></div>';
     } else {
       const left = session.spacesLeft;
