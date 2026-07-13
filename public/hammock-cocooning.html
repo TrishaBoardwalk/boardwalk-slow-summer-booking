@@ -110,7 +110,7 @@
     <p class="eyebrow" data-i18n="eyebrow">Slow Summer · Boardwalk Aruba</p>
     <h1><span data-i18n="title1">Hammock</span><br/><span class="italic" data-i18n="title2">Cocooning</span></h1>
     <p class="intro" data-i18n="intro">Cocoon in a soft anti-gravity hammock beneath the stars while gentle movement, guided breath, and meditation help your body soften and your mind unwind.</p>
-    <p class="schedule" data-i18n="schedule">Sundays · 7:00 – 8:00 pm · Boardwalk Garden</p>
+    <p class="schedule" data-i18n="schedule">Sundays · 6:00 – 7:00 pm · Boardwalk Garden</p>
   </header>
 
   <section class="card" id="step-sessions">
@@ -249,7 +249,7 @@ const I18N = {
     title1: "Hammock",
     title2: "Cocooning",
     intro: "Cocoon in a soft anti-gravity hammock beneath the stars while gentle movement, guided breath, and meditation help your body soften and your mind unwind.",
-    schedule: "Sundays · 7:00 – 8:00 pm · Boardwalk Garden",
+    schedule: "Sundays · 6:00 – 7:00 pm · Boardwalk Garden",
     chooseEvening: "Choose your evening",
     loading: "Checking availability…",
     legendOpen: "Open", legendLow: "Filling up", legendFull: "Waitlist only",
@@ -284,7 +284,7 @@ const I18N = {
     errorNoAvail: "We can't load availability right now. Please refresh or visit the front desk.",
     errorNoName: "Please add your name.",
     footer: "Boardwalk Boutique Hotel Aruba <span class=\"italic\">· Slow Summer 2026</span><br>Need help? Stop by the front desk or message us through the app.",
-    sessionTimeLabel: "7:00 – 8:00 pm",
+    sessionTimeLabel: "6:00 – 7:00 pm",
     locationLabel: "Boardwalk Garden"
   },
   es: {
@@ -292,7 +292,7 @@ const I18N = {
     title1: "Cocoon en",
     title2: "Hamaca",
     intro: "Acurrúcate en una suave hamaca anti-gravedad bajo las estrellas mientras el movimiento suave, la respiración guiada y la meditación ayudan a tu cuerpo a relajarse y tu mente a descansar.",
-    schedule: "Domingos · 7:00 – 8:00 pm · Jardín de Boardwalk",
+    schedule: "Domingos · 6:00 – 7:00 pm · Jardín de Boardwalk",
     chooseEvening: "Elige tu noche",
     loading: "Verificando disponibilidad…",
     legendOpen: "Disponible", legendLow: "Casi lleno", legendFull: "Solo lista de espera",
@@ -327,7 +327,7 @@ const I18N = {
     errorNoAvail: "No podemos cargar la disponibilidad en este momento. Refresca la página o pasa por recepción.",
     errorNoName: "Por favor escribe tu nombre.",
     footer: "Boardwalk Boutique Hotel Aruba <span class=\"italic\">· Slow Summer 2026</span><br>¿Necesitas ayuda? Pasa por recepción o escríbenos por la app.",
-    sessionTimeLabel: "7:00 – 8:00 pm",
+    sessionTimeLabel: "6:00 – 7:00 pm",
     locationLabel: "Jardín de Boardwalk"
   }
 };
@@ -365,7 +365,7 @@ function clearError(b){b.classList.add('hidden')}
 
 function refreshFormHeading(){
   if (!selectedSession) return;
-  const d = new Date(selectedSession+'T19:00:00');
+  const d = new Date(selectedSession+'T18:00:00');
   const h = document.getElementById('formHeading');
   if (h) h.textContent = t('reservePrefix') + prettyDate(d);
   const sess = sessionsByIso[selectedSession];
@@ -423,7 +423,7 @@ document.getElementById('calNext').addEventListener('click',()=>{if(currentMonth
 function selectSession(iso,el){
   document.querySelectorAll('.cal-day.session').forEach(s=>s.classList.remove('selected'));
   el.classList.add('selected'); selectedSession=iso;
-  const s=sessionsByIso[iso], d=new Date(iso+'T19:00:00');
+  const s=sessionsByIso[iso], d=new Date(iso+'T18:00:00');
   if(s.spacesLeft<=0){
     document.getElementById('step-form').classList.add('hidden');
     document.getElementById('step-full').classList.remove('hidden');
@@ -463,7 +463,7 @@ document.getElementById('reserveBtn').addEventListener('click',async()=>{
   clearError(eb); btn.disabled=true; btn.textContent=t('reserving');
   const payload={activity:ACTIVITY,sessionDate:selectedSession,guestName:document.getElementById('guestName').value.trim(),roomNumber:document.getElementById('roomNumber').value.trim(),partySize:parseInt(document.getElementById('partySize').value,10),contactMethod:document.getElementById('contactMethod').value,waiverConfirmed:true};
   try{
-    const r=await postBooking(payload); const d=new Date(selectedSession+'T19:00:00');
+    const r=await postBooking(payload); const d=new Date(selectedSession+'T18:00:00');
     if(r.status==='Waitlisted'){
       document.getElementById('waitlistedText').innerHTML=t('positionPrefix')+'<strong>'+r.waitlistPosition+'</strong>'+t('positionSuffix')+prettyDate(d)+'.';
       if(r.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(r.bookingPageId)+'">'+t('leaveWaitlist')+'</a>';
@@ -485,7 +485,7 @@ document.getElementById('waitlistBtn').addEventListener('click',async()=>{
   btn.disabled=true; btn.textContent=t('joining');
   const payload={activity:ACTIVITY,sessionDate:selectedSession,guestName:n,roomNumber:r,partySize:p,contactMethod:cm,waiverConfirmed:true};
   try{
-    const res=await postBooking(payload); const d=new Date(selectedSession+'T19:00:00');
+    const res=await postBooking(payload); const d=new Date(selectedSession+'T18:00:00');
     document.getElementById('waitlistedText').innerHTML=t('positionPrefix')+'<strong>'+(res.waitlistPosition||'—')+'</strong>'+t('positionSuffix')+prettyDate(d)+'.';
     if(res.bookingPageId)document.getElementById('waitlistCancelRow').innerHTML='<a href="'+CANCEL_BASE+encodeURIComponent(res.bookingPageId)+'">'+t('leaveWaitlist')+'</a>';
     showStep('step-waitlisted');
